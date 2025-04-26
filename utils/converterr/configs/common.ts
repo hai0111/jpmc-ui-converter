@@ -31,6 +31,11 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
+    detected: `msg_box_notice_left(?=")`,
+    dataReplaced: "msg_box_error_left alert",
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: `&nbsp;`,
     dataReplaced: "",
   },
@@ -280,7 +285,7 @@ const rulesConfig: IRuleConfig[] = [
     type: ERuleConfigType.WRAP,
     detected: "(?<=<table[^>]*>)(%any%*?)(?=</table>)",
     dataReplaced: `
-    <tbody class="table__tbody">  
+    <tbody class="table__tbody">
       %content%
     </tbody>
   `,

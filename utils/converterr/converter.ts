@@ -237,7 +237,7 @@ export default class Converter {
   }
 
   handleCleanUp(content: string) {
-    content = content.replace(regexParser("\n+"), "\n");
+    content = content.replace(regexParser("[\r\n]+"), "\n");
     return content;
   }
 

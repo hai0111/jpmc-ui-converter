@@ -13,7 +13,12 @@
           </UFormField>
 
           <UFormField label="Content">
-            <UTextarea v-model="converter.CONTENT" class="w-full" />
+            <UTextarea
+              v-model="converter.CONTENT"
+              :maxrows="20"
+              autoresize
+              class="w-full"
+            />
           </UFormField>
 
           <div class="flex justify-end">
@@ -25,14 +30,28 @@
             </UButton>
           </div>
 
-          <UFormField label="Convert View">
+          <UFormField>
+            <template #label>
+              <div class="flex items-center gap-2">
+                View changes
+                <UIcon
+                  v-if="convertedContent"
+                  name="iconamoon:copy-thin"
+                  :size="24"
+                  class="cursor-pointer"
+                  @click="onClickCopy"
+                />
+              </div>
+            </template>
             <ClientOnly>
               <CodeDiff
                 :old-string="originalContent"
                 :new-string="convertedContent"
                 output-format="side-by-side"
+                class="max-h-[800px]"
               />
             </ClientOnly>
+            <CodeReader :text="originalContent" />
           </UFormField>
         </main>
       </template>
@@ -75,7 +94,7 @@
 
 <script lang="ts" setup>
 import type { TabsItem } from "@nuxt/ui";
-import { CodeDiff } from "v-code-diff";
+import { CodeDiff, CodeReader } from "v-code-diff";
 import Converter from "./utils/converterr/converter";
 import * as configs from "./utils/converterr/configs";
 import type { IConvertBody } from "./server/api/convert.post";
@@ -114,6 +133,16 @@ const onClickConvertByPath = async () => {
       pathOutput: converter.value.PATH_OUTPUT,
       regex: converter.value.PATH_MATCH,
     } as IConvertBody,
+  });
+};
+
+const toast = useToast();
+const onClickCopy = async () => {
+  await navigator.clipboard.writeText(convertedContent.value);
+  toast.add({
+    type: "background",
+    color: "success",
+    description: "Copy thành công",
   });
 };
 
