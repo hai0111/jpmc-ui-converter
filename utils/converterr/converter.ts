@@ -37,9 +37,11 @@ export default class Converter {
   PATH_INPUT = process.env.PATH_INPUT!;
   PATH_OUTPUT = process.env.PATH_OUTPUT!;
   PATH_MATCH = "(\\list\\index|\\list).jsp$";
+  DEFAULT_CONFIGS: (keyof typeof converterConfig)[] = ["common"];
   CONFIGS: (keyof typeof converterConfig)[] = [];
   WRITABLE = true;
   CONTENT = "";
+  IS_FORM_TABLE = false;
 
   deleteRules: IRuleConfig[] = [];
   editRules: IRuleConfig[] = [];
@@ -48,11 +50,19 @@ export default class Converter {
 
   init() {
     const configs = [];
+    const configsName = this.DEFAULT_CONFIGS.concat(
+      this.IS_FORM_TABLE ? "formTable" : "table"
+    ).concat(this.CONFIGS);
     for (const key in converterConfig) {
-      if (this.CONFIGS.includes(key as keyof typeof converterConfig)) {
+      if (configsName.includes(key as keyof typeof converterConfig)) {
         configs.push(...converterConfig[key as keyof typeof converterConfig]);
       }
     }
+
+    this.deleteRules = [];
+    this.editRules = [];
+    this.moveRules = [];
+    this.wrapRules = [];
 
     configs.forEach((item) => {
       switch (item.type) {

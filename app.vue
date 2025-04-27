@@ -12,6 +12,30 @@
             />
           </UFormField>
 
+          <UFormField label="Suggestions">
+            <UCard
+              variant="outline"
+              :ui="{ body: 'sm:p-0 flex', root: 'mt-3' }"
+            >
+              <UTabs
+                v-model="suggestContent"
+                orientation="vertical"
+                activationMode="automatic"
+                :items="suggestions"
+                :ui="{
+                  trigger: 'w-[200px]',
+                  list: 'rounded-none',
+                  root: 'items-start gap-0',
+                }"
+              />
+
+              <CodeReader
+                class="!m-0 !border-0 !border-l !rounded-none"
+                :text="suggestContent"
+              />
+            </UCard>
+          </UFormField>
+
           <UFormField label="Content">
             <UTextarea
               v-model="converter.CONTENT"
@@ -21,13 +45,9 @@
             />
           </UFormField>
 
-          <div class="flex justify-end">
-            <UButton
-              class="text-center justify-center cursor-pointer"
-              @click="onClickConvert"
-            >
-              Convert
-            </UButton>
+          <div class="flex justify-between">
+            <USwitch v-model="converter.IS_FORM_TABLE" label="Form table" />
+            <UButton @click="onClickConvert"> Convert </UButton>
           </div>
 
           <UFormField>
@@ -51,7 +71,6 @@
                 class="max-h-[800px]"
               />
             </ClientOnly>
-            <CodeReader :text="originalContent" />
           </UFormField>
         </main>
       </template>
@@ -79,12 +98,7 @@
           </UFormField>
 
           <div class="flex justify-end">
-            <UButton
-              @click="onClickConvertByPath"
-              class="text-center justify-center cursor-pointer"
-            >
-              Run Script
-            </UButton>
+            <UButton @click="onClickConvertByPath"> Run Script </UButton>
           </div>
         </main>
       </template>
@@ -97,6 +111,7 @@ import type { TabsItem } from "@nuxt/ui";
 import { CodeDiff, CodeReader } from "v-code-diff";
 import Converter from "./utils/converterr/converter";
 import * as configs from "./utils/converterr/configs";
+import * as suggestionContents from "./utils/suggestion";
 import type { IConvertBody } from "./server/api/convert.post";
 
 const items = ref<TabsItem[]>([
@@ -112,10 +127,26 @@ const items = ref<TabsItem[]>([
   },
 ]);
 
+const suggestions = ref<TabsItem[]>([
+  {
+    label: "Content",
+    icon: "material-symbols:content-paste-sharp",
+  },
+  {
+    label: "Path",
+    icon: "solar:folder-path-connect-broken",
+  },
+]);
+
+const suggestContent = ref<string>();
+
 const originalContent = ref("");
 const convertedContent = ref("");
 
-const configItems = ref(Object.keys(configs));
+const ignoreDefaultConfigs = ["common", "table", "formTable"];
+const configItems = ref(
+  Object.keys(configs).filter((key) => !ignoreDefaultConfigs.includes(key))
+);
 
 const converter = ref(new Converter());
 
@@ -148,8 +179,34 @@ const onClickCopy = async () => {
 
 watch(
   () => converter.value.CONFIGS,
+  (vals) => {
+    suggestions.value = [];
+    Object.keys(suggestionContents).forEach((key) => {
+      if (vals.includes(key as any)) {
+        const item = suggestionContents[key as keyof typeof suggestionContents];
+        suggestions.value.push(
+          ...Object.keys(item).map((k) => ({
+            label: k,
+            value: (item as any)[k] as string,
+          }))
+        );
+      }
+    });
+    suggestContent.value = (suggestions.value[0]?.value as string) || "";
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(
+  () => [converter.value.CONFIGS, converter.value.IS_FORM_TABLE],
   () => {
     converter.value.init();
+  },
+  {
+    deep: true,
+    immediate: true,
   }
 );
 
@@ -172,6 +229,7 @@ onMounted(() => {
   converter.value.PATH_INPUT = dataCookie.value.PATH_INPUT;
   converter.value.PATH_OUTPUT = dataCookie.value.PATH_OUTPUT;
   converter.value.PATH_MATCH = dataCookie.value.PATH_MATCH;
+  converter.value.IS_FORM_TABLE = dataCookie.value.IS_FORM_TABLE;
 });
 
 watch(
@@ -183,6 +241,7 @@ watch(
     dataCookie.value.PATH_INPUT = converter.value.PATH_INPUT;
     dataCookie.value.PATH_OUTPUT = converter.value.PATH_OUTPUT;
     dataCookie.value.PATH_MATCH = converter.value.PATH_MATCH;
+    dataCookie.value.IS_FORM_TABLE = converter.value.IS_FORM_TABLE;
   },
   {
     deep: true,
