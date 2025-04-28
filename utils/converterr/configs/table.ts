@@ -5,32 +5,32 @@ const ruleConfigs: IRuleConfig[] = [
     type: ERuleConfigType.EDIT,
     detected: `<table[^>]*>%any%+?</table>`,
     dataReplaced: (str) => {
-      str = str.replaceClasses(regexParser("<table[^>]*>"), "table");
+      str = str.addClasses(regexParser("<table[^>]*>"), "table");
 
-      str = str.replaceClasses(regexParser("<thead[^>]*>"), "table__thead");
+      str = str.addClasses(regexParser("<thead[^>]*>"), "table__thead");
 
-      str = str.replaceClasses(regexParser("<tbody[^>]*>"), "table__tbody");
+      str = str.addClasses(regexParser("<tbody[^>]*>"), "table__tbody");
 
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser("(?<=<thead[^>]*>%any%*)<tr[^>]*>(?=%any%*</thead>)"),
         "table__thead__row"
       );
 
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser("(?<!<thead[^>]*>%any%*)<tr[^>]*>(?!%any%*</thead>)"),
         "table__tbody__row"
       );
 
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser("<th [^>]*>"),
         "table__column table__column--border-right table__column--center"
       );
 
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser("<td[^>]*>"),
         "table__column table__column--border-right table__column--center"
       );
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser(
           "<t[dh][^>]*>(?=((?<!%any%*?</t[dh]>)%any%)*</t[dh]>%after%*</tr>)"
         ),

@@ -47,7 +47,9 @@
 
           <div class="flex justify-between">
             <USwitch v-model="converter.IS_FORM_TABLE" label="Form table" />
-            <UButton @click="onClickConvert"> Convert </UButton>
+            <UButton class="cursor-pointer" @click="onClickConvert">
+              Convert
+            </UButton>
           </div>
 
           <UFormField>
@@ -98,7 +100,9 @@
           </UFormField>
 
           <div class="flex justify-end">
-            <UButton @click="onClickConvertByPath"> Run Script </UButton>
+            <UButton class="cursor-pointer" @click="onClickConvertByPath">
+              Run Script
+            </UButton>
           </div>
         </main>
       </template>

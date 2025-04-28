@@ -5,7 +5,7 @@ const ruleConfigs: IRuleConfig[] = [
     type: ERuleConfigType.EDIT,
     detected: `<table[^>]*>%any%+?</table>`,
     dataReplaced: (str) => {
-      str = str.replaceClasses(regexParser("(<table[^>]*>)"), "form-table");
+      str = str.addClasses(regexParser("(<table[^>]*>)"), "form-table");
 
       str = str.replace(
         regexParser(
@@ -14,16 +14,13 @@ const ruleConfigs: IRuleConfig[] = [
         '<div class="form-table__title">$2</div>'
       );
 
-      str = str.replaceClasses(
-        regexParser("<tr[^>]*[^>]*>"),
-        "form-table__row"
-      );
+      str = str.addClasses(regexParser("<tr[^>]*[^>]*>"), "form-table__row");
 
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser("<td[^>]*tbl_header[^>]*>"),
         "form-table__label"
       );
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser("<td((?![^>]*form-table__label)[^>])*>"),
         "form-table__control"
       );

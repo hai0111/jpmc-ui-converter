@@ -129,17 +129,17 @@ const rulesConfig: IRuleConfig[] = [
       let isBeforeCurrent = true;
       str = str.replace(regexParser("<li[^>]*>%any%*?</li>"), (li) => {
         if (li.includes("current")) {
-          li = li.replaceClasses(
+          li = li.addClasses(
             /<li[^>]*>/,
             "stepper__item stepper__item--current"
           );
           isBeforeCurrent = false;
         } else if (isBeforeCurrent)
-          li = li.replaceClasses(
+          li = li.addClasses(
             /<li[^>]*>/,
             "stepper__item stepper__item--completed"
           );
-        else li = li.replaceClasses(/<li[^>]*>/, "stepper__item");
+        else li = li.addClasses(/<li[^>]*>/, "stepper__item");
 
         li = li.replace(/<\/?(a|em)[^>]*>/g, "");
         return li;

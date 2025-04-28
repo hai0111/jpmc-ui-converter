@@ -9,25 +9,52 @@ import {
 
 declare global {
   interface String {
+    addClasses(pattern: string | RegExp, replacement: string): string;
     replaceClasses(pattern: string | RegExp, replacement: string): string;
   }
 }
+
+String.prototype.addClasses = function (pattern, classes: string) {
+  let result = this.toString();
+
+  result = result.replace(pattern, (str) => {
+    const isHasClass = /class="[^"]*"/.test(str);
+    const isHasCssClass = /cssClass="[^"]*"/.test(str);
+    const isJspTag = /<\w+:\w+/.test(str);
+
+    if (isHasClass) {
+      str = str.replace(/class="([^"]*)"/g, `class="$1 ${classes}"`);
+    } else if (isHasCssClass) {
+      str = str.replace(/cssClass="([^"]*)"/g, `cssClass="$1 ${classes}"`);
+    } else if (isJspTag) {
+      str = str.replace(/<[\w:]+/g, (str) => `${str} cssClass="${classes}"`);
+    } else {
+      str = str.replace(/<[\w]+/g, (str) => `${str} class="${classes}"`);
+    }
+    return str;
+  });
+
+  return result;
+};
 
 String.prototype.replaceClasses = function (pattern, classes: string) {
   let result = this.toString();
 
   result = result.replace(pattern, (str) => {
-    let replacer = str;
-    const isHasClass = /class="[^"]*"/.test(replacer);
+    const isHasClass = /class="[^"]*"/.test(str);
+    const isHasCssClass = /cssClass="[^"]*"/.test(str);
+    const isJspTag = /<\w+:\w+/.test(str);
+
     if (isHasClass) {
-      replacer = replacer.replace(/class="([^"]*)"/g, `class="${classes}"`);
+      str = str.replace(/class="([^"]*)"/g, `class="${classes}"`);
+    } else if (isHasCssClass) {
+      str = str.replace(/cssClass="([^"]*)"/g, `cssClass="${classes}"`);
+    } else if (isJspTag) {
+      str = str.replace(/<[\w:]+/g, (str) => `${str} cssClass="${classes}"`);
     } else {
-      replacer = replacer.replace(
-        /<\w+/g,
-        (str) => `${str} class="${classes}"`
-      );
+      str = str.replace(/<[\w]+/g, (str) => `${str} class="${classes}"`);
     }
-    return replacer;
+    return str;
   });
 
   return result;
@@ -37,7 +64,7 @@ export default class Converter {
   PATH_INPUT = process.env.PATH_INPUT!;
   PATH_OUTPUT = process.env.PATH_OUTPUT!;
   PATH_MATCH = "(\\list\\index|\\list).jsp$";
-  DEFAULT_CONFIGS: (keyof typeof converterConfig)[] = ["common"];
+  DEFAULT_CONFIGS: (keyof typeof converterConfig)[] = ["common", "form"];
   CONFIGS: (keyof typeof converterConfig)[] = [];
   WRITABLE = true;
   CONTENT = "";
@@ -178,7 +205,7 @@ export default class Converter {
           er.dataReplaced.includes("class:")
         ) {
           const classes = er.dataReplaced.replace("class:", "");
-          content = content.replaceClasses(regex, classes);
+          content = content.addClasses(regex, classes);
           return;
         }
         content = content.replace(
