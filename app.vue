@@ -131,6 +131,13 @@ const items = ref<TabsItem[]>([
   },
 ]);
 
+const suggestionsDefault: TabsItem[] = Object.keys(
+  suggestionContents.common
+).map((key) => ({
+  label: key,
+  value: (suggestionContents.common as any)[key],
+}));
+
 const suggestions = ref<TabsItem[]>([
   {
     label: "Content",
@@ -185,6 +192,7 @@ watch(
   () => converter.value.CONFIGS,
   (vals) => {
     suggestions.value = [];
+
     Object.keys(suggestionContents).forEach((key) => {
       if (vals.includes(key as any)) {
         const item = suggestionContents[key as keyof typeof suggestionContents];
@@ -197,6 +205,7 @@ watch(
       }
     });
     suggestContent.value = (suggestions.value[0]?.value as string) || "";
+    suggestions.value.push(...JSON.parse(JSON.stringify(suggestionsDefault)));
   },
   {
     immediate: true,

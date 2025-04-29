@@ -42,7 +42,7 @@ const ruleConfigs: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.WRAP,
-    detected: "(?<=<table[^>]*>)(%any%*?)(?=</table>)",
+    detected: "(?<=<table[^>]*>)(%any%+?)(?=</table>)",
     dataReplaced: `
     <tbody class="table__tbody">
       %content%
@@ -51,9 +51,9 @@ const ruleConfigs: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.WRAP,
-    detected: "(<table[^>]*#table[^>]*>%any%*?</table>)",
+    detected: "(<table[^>]*>%any%*?</table>)",
     dataReplaced: `
-    <div class="table__container">  
+    <div class="table__container">
       %content%
     </div>
   `,

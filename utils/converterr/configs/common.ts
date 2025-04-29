@@ -21,7 +21,7 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
-    detected: `<link((?<![^>]*calendar.css)[^>])*>`,
+    detected: `<link((?<![^>]*(?:calendar.css|ajaxComboBox.css))[^>])*>`,
     dataReplaced: "",
   },
   {

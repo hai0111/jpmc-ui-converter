@@ -23,9 +23,15 @@ String.prototype.addClasses = function (pattern, classes: string) {
     const isJspTag = /<\w+:\w+/.test(str);
 
     if (isHasClass) {
-      str = str.replace(/class="([^"]*)"/g, `class="$1 ${classes}"`);
+      str = str.replace(/class="([^"]*)"/g, (_, p1) => {
+        if (p1) p1 = p1.replace(classes, "");
+        return `class="${p1} ${classes}"`;
+      });
     } else if (isHasCssClass) {
-      str = str.replace(/cssClass="([^"]*)"/g, `cssClass="$1 ${classes}"`);
+      str = str.replace(/cssClass="([^"]*)"/g, (_, p1) => {
+        if (p1) p1 = p1.replace(classes, "");
+        return `cssClass="${p1} ${classes}"`;
+      });
     } else if (isJspTag) {
       str = str.replace(/<[\w:]+/g, (str) => `${str} cssClass="${classes}"`);
     } else {
