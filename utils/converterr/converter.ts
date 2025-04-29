@@ -6,6 +6,7 @@ import {
   ERuleConfigType,
   regexParser,
 } from "./configs/utils";
+import { load } from "cheerio";
 
 declare global {
   interface String {
@@ -208,12 +209,22 @@ export default class Converter {
       do {
         if (
           typeof er.dataReplaced === "string" &&
-          er.dataReplaced.includes("class:")
+          er.dataReplaced.includes("add_class:")
         ) {
-          const classes = er.dataReplaced.replace("class:", "");
+          const classes = er.dataReplaced.replace("add_class:", "");
           content = content.addClasses(regex, classes);
           return;
         }
+
+        if (
+          typeof er.dataReplaced === "string" &&
+          er.dataReplaced.includes("replace_class:")
+        ) {
+          const classes = er.dataReplaced.replace("replace_class:", "");
+          content = content.replaceClasses(regex, classes);
+          return;
+        }
+
         content = content.replace(
           regex,
           this.getReplacer(er.dataReplaced) as any
@@ -281,6 +292,22 @@ export default class Converter {
 
   handleCleanUp(content: string) {
     content = content.replace(regexParser("[\r\n]+"), "\n");
+    content = content.replace(regexParser('class="([^"]*)"'), (_, p1) => {
+      return `class="${p1.trim().replace(/\s+/g, " ")}"`;
+    });
+
+    content = content.replace(regexParser('class=""'), "");
+    // content = content.replace(
+    //   regexParser("<body[^>]*>%any%+?</body>"),
+    //   (htmlContent) => {
+    //     htmlContent = load(htmlContent, {
+    //       xmlMode: true,
+    //     }).html();
+    //     htmlContent = htmlContent.replace("<html><head></head>", "");
+    //     htmlContent = htmlContent.replace("</html>", "");
+    //     return htmlContent;
+    //   }
+    // );
     return content;
   }
 
@@ -288,8 +315,6 @@ export default class Converter {
     if (!replacer) return "";
     else if (typeof replacer === "string") return replacer;
     return (_: string, ...params: any[]) => {
-      params.pop();
-      params.pop();
       return replacer(_, ...params);
     };
   }

@@ -16,6 +16,11 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
+    detected: `txt_\\w+|td_bottom|td_top|tbl_header|dot_top|tbl_header_center|comm_tbl|comm_tbl_form-table`,
+    dataReplaced: "",
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: `<c:import[^>]*head_google_font.jsp[^>]*>`,
     dataReplaced: "",
   },
@@ -56,7 +61,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected: "btn_\\d+",
-    dataReplaced: "btn btn--tertiary btn--font-size-16 btn--font-weight-700",
+    dataReplaced: "btn btn--primary btn--font-size-16 btn--font-weight-700",
   },
   // {
   //   type: ERuleConfigType.EDIT,
@@ -165,7 +170,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected: "<a(?:[^>])*>%space%*(&lt;|&gt;)%space%*</a>",
-    dataReplaced: "class:pagination__item__link",
+    dataReplaced: "add_class:pagination__item__link",
   },
   {
     type: ERuleConfigType.WRAP,

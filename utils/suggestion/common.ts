@@ -1,3 +1,5 @@
+export const activeTab = '<c:param name="activeTab" value=""/>';
+
 export const row =
   '<div class="layout layout--row layout--align-center layout--gap-16 layout--width-full"></div>';
 

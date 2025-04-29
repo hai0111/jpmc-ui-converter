@@ -17,16 +17,26 @@ const ruleConfigs: IRuleConfig[] = [
 
       str = str.addClasses(regexParser("<tr[^>]*[^>]*>"), "form-table__row");
 
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser(
           "(?<=<tr[^>]*form-table__row[^>]*>(%space%+)?)<(?:td|th)[^>]*>"
         ),
         "form-table__label"
       );
 
-      str = str.replaceClasses(
+      str = str.addClasses(
         regexParser("<(?:td|th)((?![^>]*form-table__label)[^>])*>"),
         "form-table__control"
+      );
+
+      str = str.replace(
+        regexParser(
+          "(?<=<(?:td|th)[^>]*form-table__control[^>]*>)(%any%*?)(?=</(?:td|th)>)"
+        ),
+        `<div class="form-table__input">
+        $1
+</div>
+`
       );
 
       str = str.replace(regexParser("</(table|tr|td|th)>"), "</div>");

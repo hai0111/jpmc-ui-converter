@@ -30,13 +30,6 @@ const ruleConfigs: IRuleConfig[] = [
         regexParser("<td[^>]*>"),
         "table__column table__column--border-right table__column--center"
       );
-      str = str.addClasses(
-        regexParser(
-          "<t[dh][^>]*>(?=((?<!%any%*?</t[dh]>)%any%)*</t[dh]>%after%*</tr>)"
-        ),
-        "table__column table__column--center"
-      );
-
       return str;
     },
   },
