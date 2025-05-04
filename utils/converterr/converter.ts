@@ -299,6 +299,8 @@ export default class Converter {
       regexParser("(?<=<[\\w:]+[^>]*)\n(?=[^>]*>)"),
       ""
     );
+
+    // Remove old Errors
     const customErrors = content.match(
       regexParser("<form:errors[^>]*#custom[^>]*>")
     );
