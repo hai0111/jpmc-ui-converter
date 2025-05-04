@@ -10,13 +10,28 @@ const rulesConfig: IRuleConfig[] = [
     detected: `<div[^>]*content_main[^>]*">`,
   },
   {
+    type: ERuleConfigType.DELETE,
+    detected: `<div class="table__container">`,
+  },
+  {
     type: ERuleConfigType.EDIT,
     detected: `<br class="clear"/>`,
     dataReplaced: "",
   },
   {
     type: ERuleConfigType.EDIT,
-    detected: `txt_\\w+|td_bottom|td_top|tbl_header|dot_top|tbl_header_center|comm_tbl|comm_tbl_form-table`,
+    detected: [
+      "txt_\\w+",
+      "td_bottom",
+      "td_top",
+      "dot_top",
+      "tbl_header_center",
+      "tbl_header",
+      "comm_tbl[\\w_-\\d]*",
+      "no_border[\\w_-\\d]*",
+      "table__[\\w_-\\d]+",
+      '(?<=class="[^"]*)table(?=[^"]*")',
+    ].join("|"),
     dataReplaced: "",
   },
   {

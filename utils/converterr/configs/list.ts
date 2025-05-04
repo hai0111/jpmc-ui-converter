@@ -13,6 +13,17 @@ const ruleConfigs: IRuleConfig[] = [
     </main>
         `,
   },
+  {
+    type: ERuleConfigType.EDIT,
+    detected:
+      "<div[^>]*header_title[^>]*>%space%*<p>([^<]+?)</p>%space%*</div>",
+    dataReplaced: `<div class="asis-content__list__header">
+    <div class="asis-content__list__header__left">
+        <p class="heading heading--14">$1</p>
+    </div>
+</div>
+        `,
+  },
 ];
 
 export default ruleConfigs;

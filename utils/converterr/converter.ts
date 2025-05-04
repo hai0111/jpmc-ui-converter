@@ -6,7 +6,6 @@ import {
   ERuleConfigType,
   regexParser,
 } from "./configs/utils";
-import { load } from "cheerio";
 
 declare global {
   interface String {
@@ -291,23 +290,31 @@ export default class Converter {
   }
 
   handleCleanUp(content: string) {
-    content = content.replace(regexParser("[\r\n]+"), "\n");
+    content = content.replace(regexParser("(\n\\s*\n)+"), "\n");
     content = content.replace(regexParser('class="([^"]*)"'), (_, p1) => {
       return `class="${p1.trim().replace(/\s+/g, " ")}"`;
     });
-
     content = content.replace(regexParser('class=""'), "");
-    // content = content.replace(
-    //   regexParser("<body[^>]*>%any%+?</body>"),
-    //   (htmlContent) => {
-    //     htmlContent = load(htmlContent, {
-    //       xmlMode: true,
-    //     }).html();
-    //     htmlContent = htmlContent.replace("<html><head></head>", "");
-    //     htmlContent = htmlContent.replace("</html>", "");
-    //     return htmlContent;
-    //   }
-    // );
+    content = content.replace(
+      regexParser("(?<=<[\\w:]+[^>]*)\n(?=[^>]*>)"),
+      ""
+    );
+    const customErrors = content.match(
+      regexParser("<form:errors[^>]*#custom[^>]*>")
+    );
+
+    customErrors?.forEach((ce) => {
+      const path = ce.match(/(?<=path=").+?(?=")/)?.[0] || "";
+      let isRemoveOriginError = false;
+      content.replace(regexParser(`<form:errors[^>]*${path}[^>]*>`), (str) => {
+        if (!str.includes("#custom")) {
+          isRemoveOriginError = true;
+          return "";
+        }
+        return str.replace("#custom", "");
+      });
+    });
+
     return content;
   }
 
