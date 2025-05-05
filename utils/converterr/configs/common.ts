@@ -22,9 +22,14 @@ const rulesConfig: IRuleConfig[] = [
     type: ERuleConfigType.EDIT,
     detected: [
       "txt_\\w+",
+      "ime_\\w+",
+      "input_error",
+      "right_contents",
+      "submit_area",
       "td_bottom",
       "td_top",
       "dot_top",
+      "dot_bottom",
       "tbl_header_center",
       "tbl_header",
       "comm_tbl[\\w_-\\d]*",
@@ -54,11 +59,11 @@ const rulesConfig: IRuleConfig[] = [
     detected: `msg_box_notice_left(?=")`,
     dataReplaced: "msg_box_error_left alert",
   },
-  {
-    type: ERuleConfigType.EDIT,
-    detected: `&nbsp;`,
-    dataReplaced: "",
-  },
+  // {
+  //   type: ERuleConfigType.EDIT,
+  //   detected: `&nbsp;`,
+  //   dataReplaced: "",
+  // },
   // {
   //   type: ERuleConfigType.EDIT,
   //   detected: `style="[^"]*?"`,
@@ -185,7 +190,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected: "<a(?:[^>])*>%space%*(&lt;|&gt;)%space%*</a>",
-    dataReplaced: "add_class:pagination__item__link",
+    dataReplaced: "addClass:pagination__item__link",
   },
   {
     type: ERuleConfigType.WRAP,

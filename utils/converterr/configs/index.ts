@@ -5,3 +5,4 @@ export { default as detail } from "./detail";
 export { default as list } from "./list";
 export { default as table } from "./table";
 export { default as formTable } from "./formTable";
+export { default as edit } from "./edit";

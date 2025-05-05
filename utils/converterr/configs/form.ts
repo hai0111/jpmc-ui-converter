@@ -125,7 +125,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected: "<form:errors[^>]*/>",
-    dataReplaced: "replace_class:form-error",
+    dataReplaced: "replaceClass:form-error",
   },
 ];
 

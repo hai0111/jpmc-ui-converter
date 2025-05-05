@@ -2,6 +2,10 @@ import { ERuleConfigType, regexParser, type IRuleConfig } from "./utils";
 
 const ruleConfigs: IRuleConfig[] = [
   {
+    type: ERuleConfigType.DELETE,
+    detected: "<tbody[^>]*>",
+  },
+  {
     type: ERuleConfigType.EDIT,
     isNested: true,
     detected: `<table[^>]*>((?<!%any%*<table)%any%)+?</table>`,
@@ -45,6 +49,12 @@ const ruleConfigs: IRuleConfig[] = [
       str = str.replace(regexParser('colspan="\\d+"'), "");
       return str;
     },
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected:
+      "<div[^>]*form-table__label[^>]*>(?=((?<!%any%*<div[^>]*form-table__row[^>]*>)%any%)+input_required)",
+    dataReplaced: "addClass:form-label--required",
   },
 ];
 

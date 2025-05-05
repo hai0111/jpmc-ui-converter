@@ -208,18 +208,18 @@ export default class Converter {
       do {
         if (
           typeof er.dataReplaced === "string" &&
-          er.dataReplaced.includes("add_class:")
+          er.dataReplaced.includes("addClass:")
         ) {
-          const classes = er.dataReplaced.replace("add_class:", "");
+          const classes = er.dataReplaced.replace("addClass:", "");
           content = content.addClasses(regex, classes);
           return;
         }
 
         if (
           typeof er.dataReplaced === "string" &&
-          er.dataReplaced.includes("replace_class:")
+          er.dataReplaced.includes("replaceClass:")
         ) {
-          const classes = er.dataReplaced.replace("replace_class:", "");
+          const classes = er.dataReplaced.replace("replaceClass:", "");
           content = content.replaceClasses(regex, classes);
           return;
         }
@@ -290,11 +290,27 @@ export default class Converter {
   }
 
   handleCleanUp(content: string) {
+    content = content.replace(regexParser("input_required"), "");
     content = content.replace(regexParser("(\n\\s*\n)+"), "\n");
     content = content.replace(regexParser('class="([^"]*)"'), (_, p1) => {
       return `class="${p1.trim().replace(/\s+/g, " ")}"`;
     });
-    content = content.replace(regexParser('class=""'), "");
+
+    content = content.replace(regexParser('cssClass="([^"]*)"'), (_, p1) => {
+      return `cssClass="${p1.trim().replace(/\s+/g, " ")}"`;
+    });
+
+    content = content.replace(
+      regexParser('cssErrorClass="([^"]*)"'),
+      (_, p1) => {
+        return `cssErrorClass="${p1.trim().replace(/\s+/g, " ")}"`;
+      }
+    );
+
+    content = content.replace(
+      regexParser('(?:class|cssErrorClass|cssClass)=""'),
+      ""
+    );
     content = content.replace(
       regexParser("(?<=<[\\w:]+[^>]*)\n(?=[^>]*>)"),
       ""
@@ -307,14 +323,14 @@ export default class Converter {
 
     customErrors?.forEach((ce) => {
       const path = ce.match(/(?<=path=").+?(?=")/)?.[0] || "";
-      let isRemoveOriginError = false;
-      content.replace(regexParser(`<form:errors[^>]*${path}[^>]*>`), (str) => {
-        if (!str.includes("#custom")) {
-          isRemoveOriginError = true;
-          return "";
+      content = content.replace(
+        regexParser(`<form:errors[^>]*${path}[^>]*>`),
+        (str) => {
+          if (!str.includes("#custom")) {
+            return "";
+          } else return str.replace("#custom", "");
         }
-        return str.replace("#custom", "");
-      });
+      );
     });
 
     return content;
