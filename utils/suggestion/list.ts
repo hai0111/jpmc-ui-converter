@@ -1,6 +1,6 @@
 export const heading = `<div class="asis-content__list__header">
     <div class="asis-content__list__header__left">
-        <p class="heading heading--14">物件一覧</p>
+        <h2 class="heading heading--14">物件一覧</h2>
     </div>
     <div class="asis-content__list__header__right">
     </div>

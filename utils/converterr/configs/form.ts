@@ -69,7 +69,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected:
-      "(%before%*<label>[^<]*?<form:checkbox[^>]*>[^<]*?</label>%after%*)+",
+      "(%before%*<label>[^<]*?<form:checkbox[^>]*?(?:/>|>%any%*?</form:checkbox>)[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "checkbox");
 
@@ -79,7 +79,9 @@ const rulesConfig: IRuleConfig[] = [
       );
 
       str = str.replace(
-        regexParser("(?<=<form:checkbox[^>]*>)([^<]*)"),
+        regexParser(
+          "(?<=<form:checkbox[^>]*?(?:/>|>%any%*?</form:checkbox>))([^<]*)"
+        ),
         '<span class="checkbox__label">$1</span>'
       );
 
@@ -97,7 +99,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected:
-      "(%before%*<label>[^<]*?<form:radiobutton[^>]*>[^<]*?</label>%after%*)+",
+      "(%before%*<label>[^<]*?<form:radiobutton[^>]*?(?:/>|>%any%*</form:radiobutton>)[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "radio");
 
@@ -107,7 +109,9 @@ const rulesConfig: IRuleConfig[] = [
       );
 
       str = str.replace(
-        regexParser("(?<=<form:radiobutton[^>]*>)([^<]*)"),
+        regexParser(
+          "(?<=<form:radiobutton[^>]*(?:/>|>%any%*?</form:checkbox>))([^<]*)"
+        ),
         '<span class="radio__label">$1</span>'
       );
 

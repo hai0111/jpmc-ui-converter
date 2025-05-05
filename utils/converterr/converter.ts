@@ -323,16 +323,31 @@ export default class Converter {
 
     customErrors?.forEach((ce) => {
       const path = ce.match(/(?<=path=").+?(?=")/)?.[0] || "";
-      content = content.replace(
-        regexParser(`<form:errors[^>]*${path}[^>]*>`),
-        (str) => {
-          if (!str.includes("#custom")) {
-            return "";
-          } else return str.replace("#custom", "");
-        }
-      );
+
+      const isHasOriginError = new RegExp(
+        `<form:errors((?<![^>]*#custom)[^>])*${path}((?<![^>]*#custom)[^>])*>`
+      ).test(content);
+
+      if (isHasOriginError) {
+        content = content.replace(
+          regexParser(`<form:errors[^>]*${path}[^>]*>`),
+          (str) => {
+            if (!str.includes("#custom")) {
+              return "";
+            }
+            return str;
+          }
+        );
+      } else {
+        content = content.replace(ce, "");
+        content = content.replace(
+          new RegExp(` \\$\{errors.hasFieldErrors[^}]*${path}[^}]*}`, "g"),
+          ""
+        );
+      }
     });
 
+    content = content.replace(regexParser("#custom"), "");
     return content;
   }
 
