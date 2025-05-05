@@ -12,17 +12,17 @@ const ruleConfigs: IRuleConfig[] = [
       str = str.addClasses(regexParser("<tbody[^>]*>"), "table__tbody");
 
       str = str.addClasses(
-        regexParser("(?<=<thead[^>]*>%any%*)<tr[^>]*>(?=%any%*</thead>)"),
+        regexParser("(?<=<thead[^>]*>((?<!%any%*</thead>)%any%)*)<tr[^>]*>"),
         "table__thead__row"
       );
 
       str = str.addClasses(
-        regexParser("(?<!<thead[^>]*>%any%*)<tr[^>]*>(?!%any%*</thead>)"),
+        regexParser("(?<!<thead[^>]*>((?<!%any%*</thead>)%any%)*)<tr[^>]*>"),
         "table__tbody__row"
       );
 
       str = str.addClasses(
-        regexParser("<th [^>]*>"),
+        regexParser("<th[^>]*>"),
         "table__column table__column--border-right table__column--center"
       );
 

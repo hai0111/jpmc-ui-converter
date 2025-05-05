@@ -64,11 +64,11 @@ const rulesConfig: IRuleConfig[] = [
   //   detected: `&nbsp;`,
   //   dataReplaced: "",
   // },
-  // {
-  //   type: ERuleConfigType.EDIT,
-  //   detected: `style="[^"]*?"`,
-  //   dataReplaced: "",
-  // },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `style="[^"]*?"`,
+    dataReplaced: "",
+  },
   {
     type: ERuleConfigType.DELETE,
     detected: `<div[^>]*clear[^>]*">`,
