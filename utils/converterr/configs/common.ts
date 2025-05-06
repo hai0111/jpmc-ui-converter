@@ -11,7 +11,7 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.DELETE,
-    detected: `<div class="table__container">`,
+    detected: `<div[^>]*table__container[^>]*>`,
   },
   {
     type: ERuleConfigType.EDIT,
@@ -20,10 +20,15 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
+    detected: `cssErrorClass="[^"]*"`,
+    dataReplaced: "",
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: [
       "txt_\\w+",
       "ime_\\w+",
-      "input_error",
+      "even_row",
       "right_contents",
       "submit_area",
       "td_bottom",
@@ -34,8 +39,8 @@ const rulesConfig: IRuleConfig[] = [
       "tbl_header",
       "comm_tbl[\\w_-\\d]*",
       "no_border[\\w_-\\d]*",
-      "table__[\\w_-\\d]+",
-      '(?<=class="[^"]*)table(?=[^"]*")',
+      "(?<!form-)table__[\\w_-\\d]+",
+      '(?<=class="[^"]*)(?<!form-)table(?=[^"]*")',
     ].join("|"),
     dataReplaced: "",
   },

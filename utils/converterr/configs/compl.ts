@@ -23,6 +23,16 @@ const rulesConfig: IRuleConfig[] = [
                      $1`,
   },
   {
+    type: ERuleConfigType.EDIT,
+    detected: "btn--primary",
+    dataReplaced: "",
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "<br[^>]*>",
+    dataReplaced: "",
+  },
+  {
     type: ERuleConfigType.WRAP,
     detected: `(?<=<c:import[^>]*section_title[^>]*>%any%+</c:import>)(%any%+)(?=<!-- footer start -->)`,
     dataReplaced: ` 
@@ -47,3 +57,5 @@ const rulesConfig: IRuleConfig[] = [
 ];
 
 export default rulesConfig;
+
+// asis-content__complete__btn[\s\S]+asis-content__complete__btn

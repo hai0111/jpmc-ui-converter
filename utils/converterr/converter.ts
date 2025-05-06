@@ -291,6 +291,7 @@ export default class Converter {
 
   handleCleanUp(content: string) {
     content = content.replace(regexParser("input_required"), "");
+    content = content.replace(regexParser("><"), ">\n<");
     content = content.replace(regexParser("(\n\\s*\n)+"), "\n");
     content = content.replace(regexParser('class="([^"]*)"'), (_, p1) => {
       return `class="${p1.trim().replace(/\s+/g, " ")}"`;

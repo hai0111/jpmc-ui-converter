@@ -154,7 +154,7 @@ const suggestContent = ref<string>();
 const originalContent = ref("");
 const convertedContent = ref("");
 
-const ignoreDefaultConfigs = ["common", "table", "formTable"];
+const ignoreDefaultConfigs = ["common", "table", "formTable", "form"];
 const configItems = ref(
   Object.keys(configs).filter((key) => !ignoreDefaultConfigs.includes(key))
 );
