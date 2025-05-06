@@ -28,6 +28,8 @@ const rulesConfig: IRuleConfig[] = [
     detected: [
       "txt_\\w+",
       "ime_\\w+",
+      "input_disabled",
+      "msg_attention",
       "even_row",
       "right_contents",
       "submit_area",
@@ -63,6 +65,16 @@ const rulesConfig: IRuleConfig[] = [
     type: ERuleConfigType.EDIT,
     detected: `msg_box_notice_left(?=")`,
     dataReplaced: "msg_box_error_left alert",
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `(?<=msg_box_error[^>]*>%space%*)<ul[^>]*>`,
+    dataReplaced: "addClass:no-list",
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `msg_bold`,
+    dataReplaced: "text--bold",
   },
   // {
   //   type: ERuleConfigType.EDIT,
