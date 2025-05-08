@@ -28,6 +28,8 @@ const rulesConfig: IRuleConfig[] = [
     detected: [
       "txt_\\w+",
       "ime_\\w+",
+      "msg_box_conf",
+      "msg_error",
       "input_disabled",
       "msg_attention",
       "even_row",

@@ -12,6 +12,8 @@ const ruleConfigs: IRuleConfig[] = [
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("(<table[^>]*>)"), "form-table");
 
+      str = str.replace(regexParser("</?(thead|tbody|tfoot)[^>]*>"), "");
+
       str = str.replace(
         regexParser(
           "<tr>%space%*<(?:td|th)[^>]*tbl_header txt_center[^>]*>([^<]*)</(?:td|th)>%space%*</tr>"
