@@ -55,7 +55,7 @@ const rulesConfig: IRuleConfig[] = [
         "textarea__textarea"
       );
 
-      let result = `<div class="textarea \${errors.hasFieldErrors('${path}') ? 'textarea--error' : ''}">
+      let result = `<div class="textarea textarea--width-full \${errors.hasFieldErrors('${path}') ? 'textarea--error' : ''}">
       <div class="textarea__container">
       ${str}
       </div>
@@ -125,6 +125,11 @@ const rulesConfig: IRuleConfig[] = [
 
       return str;
     },
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "<form:checkbox[^>]*>",
+    dataReplaced: "addClass:checkbox__input",
   },
   {
     type: ERuleConfigType.EDIT,

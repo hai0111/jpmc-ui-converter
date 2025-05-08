@@ -78,11 +78,11 @@ const rulesConfig: IRuleConfig[] = [
     detected: `msg_bold`,
     dataReplaced: "text--bold",
   },
-  // {
-  //   type: ERuleConfigType.EDIT,
-  //   detected: `&nbsp;`,
-  //   dataReplaced: "",
-  // },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `&nbsp;`,
+    dataReplaced: "",
+  },
   {
     type: ERuleConfigType.EDIT,
     detected: `style="[^"]*?"`,
