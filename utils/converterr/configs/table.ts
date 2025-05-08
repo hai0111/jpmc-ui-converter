@@ -3,21 +3,25 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 const ruleConfigs: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
+    detected: "(?<=(?:<table[^>]*>|</thead>))(?=%before%*<tr)",
+    dataReplaced: `
+    <tbody>
+  `,
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "(?=</table>)",
+    dataReplaced: `
+    </tbody>
+  `,
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: `<table[^>]*>%any%+</table>`,
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<table[^>]*>"), "table");
 
       str = str.addClasses(regexParser("<thead[^>]*>"), "table__thead");
-
-      if (!str.includes("tbody")) {
-        if (str.includes("thead")) {
-          str = str.replace(regexParser("(?<=</thead>)"), "<tbody>");
-        } else {
-          str = str.replace(regexParser("(?<=<table[^>]*>)"), "<tbody>");
-        }
-
-        str = str.replace(regexParser("(?=</table>)"), "</tbody>");
-      }
 
       str = str.addClasses(regexParser("<tbody[^>]*>"), "table__tbody");
 
@@ -50,15 +54,6 @@ const ruleConfigs: IRuleConfig[] = [
 
       return str;
     },
-  },
-  {
-    type: ERuleConfigType.WRAP,
-    detected: "(?<=<table[^>]*>)(%any%+?)(?=</table>)",
-    dataReplaced: `
-    <tbody class="table__tbody">
-      %content%
-    </tbody>
-  `,
   },
   {
     type: ERuleConfigType.EDIT,
