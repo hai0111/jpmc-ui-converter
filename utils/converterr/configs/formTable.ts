@@ -58,6 +58,12 @@ const ruleConfigs: IRuleConfig[] = [
       "<div[^>]*form-table__label[^>]*>(?=((?<!%any%*<div[^>]*form-table__row[^>]*>)%any%)+input_required)",
     dataReplaced: "addClass:form-label--required",
   },
+  {
+    type: ERuleConfigType.EDIT,
+    detected:
+      "<c:choose>%space%*<c:when[^>]*count % 2 == 0[^>]*>(%any%*?)</c:when>%any%*?</c:choose>",
+    dataReplaced: "$1",
+  },
 ];
 
 export default ruleConfigs;

@@ -82,15 +82,16 @@ export default class Converter {
   wrapRules: IRuleConfig[] = [];
 
   init() {
-    const configs = [];
+    const configs: IRuleConfig[] = [];
     const configsName = this.DEFAULT_CONFIGS.concat(
       this.IS_FORM_TABLE ? "formTable" : "table"
     ).concat(this.CONFIGS);
-    for (const key in converterConfig) {
-      if (configsName.includes(key as keyof typeof converterConfig)) {
-        configs.push(...converterConfig[key as keyof typeof converterConfig]);
+
+    configsName.forEach((key: keyof typeof converterConfig) => {
+      if (converterConfig[key]) {
+        configs.push(...converterConfig[key]);
       }
-    }
+    });
 
     this.deleteRules = [];
     this.editRules = [];

@@ -1,6 +1,10 @@
-import { type IRuleConfig, ERuleConfigType, regexParser } from "./utils";
+import { type IRuleConfig, ERuleConfigType } from "./utils";
 
 const ruleConfigs: IRuleConfig[] = [
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "[\\w-]+--small",
+  },
   {
     type: ERuleConfigType.WRAP,
     detected:

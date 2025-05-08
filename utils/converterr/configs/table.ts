@@ -30,6 +30,13 @@ const ruleConfigs: IRuleConfig[] = [
         regexParser("<td[^>]*>"),
         "table__column table__column--border-right table__column--center"
       );
+
+      str = str.replace(
+        regexParser(
+          "table__column--center(?=((?<!%any%*</td>)%any%)*formatNumber)"
+        ),
+        "table__column--right"
+      );
       return str;
     },
   },
@@ -50,6 +57,12 @@ const ruleConfigs: IRuleConfig[] = [
       %content%
     </div>
   `,
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected:
+      "<c:choose>%space%*<c:when[^>]*count % 2 == 0[^>]*>(%any%*?)</c:when>%any%*?</c:choose>",
+    dataReplaced: "$1",
   },
 ];
 
