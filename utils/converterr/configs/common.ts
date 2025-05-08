@@ -14,6 +14,10 @@ const rulesConfig: IRuleConfig[] = [
     detected: `<div[^>]*table__container[^>]*>`,
   },
   {
+    type: ERuleConfigType.DELETE,
+    detected: `<tbody[^>]*>`,
+  },
+  {
     type: ERuleConfigType.EDIT,
     detected: `<br class="clear"/>`,
     dataReplaced: "",
