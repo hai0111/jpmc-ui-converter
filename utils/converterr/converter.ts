@@ -75,6 +75,7 @@ export default class Converter {
   WRITABLE = true;
   CONTENT = "";
   IS_FORM_TABLE = false;
+  IS_WINDOW = false;
 
   deleteRules: IRuleConfig[] = [];
   editRules: IRuleConfig[] = [];
@@ -116,9 +117,25 @@ export default class Converter {
     });
   }
 
+  convertPathToWindow(path: string) {
+    if (path.includes("/")) {
+      this.IS_WINDOW = false;
+      path = path.replace(/\//g, "\\");
+    }
+    return path;
+  }
+
+  convertPathToOrigin(path: string) {
+    if (!this.IS_WINDOW) {
+      path = path.replace(/\\/g, "/");
+    }
+    return path;
+  }
+
   walkDir(dir: string) {
+    dir = this.convertPathToWindow(dir);
     fs.readdirSync(dir).forEach((file) => {
-      const fullPath = path.join(dir, file);
+      const fullPath = this.convertPathToWindow(path.join(dir, file));
       if (fs.statSync(fullPath).isDirectory()) {
         this.walkDir(fullPath); // 🌀 Đệ quy nếu là folder
       } else if (new RegExp(this.PATH_MATCH).test(fullPath)) {
@@ -141,6 +158,8 @@ export default class Converter {
     content = this.handleMove(content);
     content = this.handleEditWithPath(content, path);
     content = this.handleCleanUp(content);
+
+    path = this.convertPathToOrigin(path);
 
     try {
       fs.writeFileSync(
