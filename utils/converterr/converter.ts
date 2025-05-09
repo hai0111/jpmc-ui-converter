@@ -11,6 +11,7 @@ declare global {
   interface String {
     addClasses(pattern: string | RegExp, replacement: string): string;
     replaceClasses(pattern: string | RegExp, replacement: string): string;
+    toNormalChar(): string;
   }
 }
 
@@ -63,6 +64,12 @@ String.prototype.replaceClasses = function (pattern, classes: string) {
     return str;
   });
 
+  return result;
+};
+
+String.prototype.toNormalChar = function () {
+  let result = this.toString();
+  result = result.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return result;
 };
 
@@ -345,7 +352,7 @@ export default class Converter {
     );
 
     customErrors?.forEach((ce) => {
-      const path = ce.match(/(?<=path=").+?(?=")/)?.[0] || "";
+      const path = (ce.match(/(?<=path=").+?(?=")/)?.[0] || "").toNormalChar();
 
       const isHasOriginError = new RegExp(
         `<form:errors((?<![^>]*#custom)[^>])*${path}((?<![^>]*#custom)[^>])*>`

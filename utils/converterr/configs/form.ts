@@ -27,12 +27,16 @@ const rulesConfig: IRuleConfig[] = [
     dataReplaced: (str) => {
       const path = str.match(/(?<=path=").+?(?=")/)?.[0] || "";
 
+      const isHasMoney = /cssClass="[^>"]*money[^>"]*"/.test(str);
+
       str = str.addClasses(
         regexParser("<form:input[^>]*>"),
         "text-input__input"
       );
 
-      let result = `<div class="text-input text-input--small \${errors.hasFieldErrors('${path}') ? 'text-input--error' : ''}">
+      let result = `<div class="text-input text-input--small${
+        isHasMoney ? " text-input--text-right" : ""
+      } \${errors.hasFieldErrors('${path}') ? 'text-input--error' : ''}">
       <div class="text-input__container">
       ${str}
       </div>

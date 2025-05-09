@@ -35,7 +35,6 @@ const rulesConfig: IRuleConfig[] = [
       "msg_box_conf",
       "msg_error",
       "input_disabled",
-      "msg_attention",
       "even_row",
       "right_contents",
       "submit_area",
