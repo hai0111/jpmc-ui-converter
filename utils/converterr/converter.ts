@@ -4,13 +4,16 @@ import * as converterConfig from "./configs";
 import {
   type IRuleConfig,
   ERuleConfigType,
+  getReplacer,
   regexParser,
+  selectAllElement,
 } from "./configs/utils";
 
 declare global {
   interface String {
     addClasses(pattern: string | RegExp, replacement: string): string;
     replaceClasses(pattern: string | RegExp, replacement: string): string;
+    replaceElements(pattern: string | RegExp, replacement: string): string;
     toNormalChar(): string;
   }
 }
@@ -70,6 +73,22 @@ String.prototype.replaceClasses = function (pattern, classes: string) {
 String.prototype.toNormalChar = function () {
   let result = this.toString();
   result = result.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return result;
+};
+
+String.prototype.replaceElements = function (
+  pattern: string,
+  replacer: string
+) {
+  let result = this.toString();
+
+  const els = selectAllElement(result, pattern);
+
+  els.forEach((el) => {
+    console.log(el);
+    result = result.replace(regexParser(el.toNormalChar()), replacer);
+  });
+
   return result;
 };
 
@@ -251,10 +270,16 @@ export default class Converter {
           return;
         }
 
-        content = content.replace(
-          regex,
-          this.getReplacer(er.dataReplaced) as any
-        );
+        if (typeof er.detected === "string" && er.detected.includes("tag:")) {
+          const detecter = er.detected.replace("tag:", "");
+          content = content.replaceElements(
+            detecter,
+            getReplacer(er.dataReplaced) as any
+          );
+          return;
+        }
+
+        content = content.replace(regex, getReplacer(er.dataReplaced) as any);
         isLeftover = regex.test(content);
       } while (isLeftover && er.isNested);
     });
@@ -379,14 +404,6 @@ export default class Converter {
 
     content = content.replace(regexParser("#custom"), "");
     return content;
-  }
-
-  getReplacer(replacer: IRuleConfig["dataReplaced"]) {
-    if (!replacer) return "";
-    else if (typeof replacer === "string") return replacer;
-    return (_: string, ...params: any[]) => {
-      return replacer(_, ...params);
-    };
   }
 
   run() {

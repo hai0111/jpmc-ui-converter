@@ -2,24 +2,12 @@ import { ERuleConfigType, regexParser, type IRuleConfig } from "./utils";
 
 const ruleConfigs: IRuleConfig[] = [
   {
-    type: ERuleConfigType.DELETE,
-    detected: "<tbody[^>]*>",
-  },
-  {
     type: ERuleConfigType.EDIT,
-    isNested: true,
-    detected: `<table[^>]*>((?<!%any%*<table)%any%)+?</table>`,
+    detected: `tag:<table[^>]*>`,
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("(<table[^>]*>)"), "form-table");
 
       str = str.replace(regexParser("</?(thead|tbody|tfoot)[^>]*>"), "");
-
-      str = str.replace(
-        regexParser(
-          "<tr>%space%*<(?:td|th)[^>]*tbl_header txt_center[^>]*>([^<]*)</(?:td|th)>%space%*</tr>"
-        ),
-        '<div class="form-table__title">$2</div>'
-      );
 
       str = str.addClasses(regexParser("<tr[^>]*[^>]*>"), "form-table__row");
 
@@ -40,9 +28,9 @@ const ruleConfigs: IRuleConfig[] = [
           "(?<=<(?:td|th)[^>]*form-table__control[^>]*>)(%any%*?)(?=</(?:td|th)>)"
         ),
         `<div class="form-table__input">
-        $1
-</div>
-`
+          $1
+  </div>
+  `
       );
 
       str = str.replace(regexParser("</(table|tr|td|th)>"), "</div>");
