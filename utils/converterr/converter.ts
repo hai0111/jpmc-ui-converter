@@ -72,7 +72,7 @@ String.prototype.replaceClasses = function (pattern, classes: string) {
 
 String.prototype.toNormalChar = function () {
   let result = this.toString();
-  result = result.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  result = result.replace(/[\.*+?^${}()|[\]\\]/g, "\\$&");
   return result;
 };
 
@@ -85,7 +85,6 @@ String.prototype.replaceElements = function (
   const els = selectAllElement(result, pattern);
 
   els.forEach((el) => {
-    console.log(el);
     result = result.replace(regexParser(el.toNormalChar()), replacer);
   });
 

@@ -58,7 +58,7 @@ export const selectAllElement = (origin: string, regexStr: string) => {
   const result: string[] = [];
   let matched;
   do {
-    matched = origin.match(regexStr)?.[0].toNormalChar();
+    matched = origin.match(regexParser(regexStr))?.[0].toNormalChar();
     if (matched) {
       const element = selectElement(origin, matched);
       if (element) {
