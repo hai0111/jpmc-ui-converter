@@ -9,7 +9,8 @@ import {
 const ruleConfigs: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
-    detected: `tag:<table[^>]*>`,
+    isNested: true,
+    detected: `<table[^>]*>((?<!%any%*<table)%any%)+?</table>`,
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("(<table[^>]*>)"), "form-table");
 

@@ -101,6 +101,7 @@ export default class Converter {
   CONTENT = "";
   IS_FORM_TABLE = false;
   IS_WINDOW = false;
+  IS_TEST = false;
 
   deleteRules: IRuleConfig[] = [];
   editRules: IRuleConfig[] = [];
@@ -115,7 +116,11 @@ export default class Converter {
 
     configsName.forEach((key: keyof typeof converterConfig) => {
       if (converterConfig[key]) {
-        configs.push(...converterConfig[key]);
+        configs.push(
+          ...converterConfig[key].filter((rule) =>
+            this.IS_TEST ? rule.test : true
+          )
+        );
       }
     });
 
@@ -182,7 +187,7 @@ export default class Converter {
     content = this.handleWrap(content);
     content = this.handleMove(content);
     content = this.handleEditWithPath(content, path);
-    content = this.handleCleanUp(content);
+    if (!this.IS_TEST) content = this.handleCleanUp(content);
 
     path = this.convertPathToOrigin(path);
 
@@ -212,7 +217,7 @@ export default class Converter {
     content = this.handleEdit(content);
     content = this.handleWrap(content);
     content = this.handleMove(content);
-    content = this.handleCleanUp(content);
+    if (!this.IS_TEST) content = this.handleCleanUp(content);
     return content;
   }
 
@@ -223,20 +228,36 @@ export default class Converter {
 
       openTags?.forEach((ot) => {
         let position: number;
+
         content = content.replace(ot, (_, p) => {
           position = p;
           return "";
         });
-        const ct = "</" + ot.match(/\w+/)![0] + ">";
-        const _ot = "<" + ot.match(/\w+/)![0];
-        const regex = `${_ot}|${ct}`;
+
+        const tagname = ot.match(/(?<=<)\w+/)![0] || "";
+
+        const ct = `</${tagname}>`;
+        const _ot = `<${tagname}[^>]*>`;
+        const regex = `%before%*${_ot}%after%*|%before%*${ct}%after%*`;
+        let isRemoved = false;
         let i = 1;
-        content = content.replace(regexParser(regex), (m, p) => {
+        content = content.replace(regexParser(regex), (m, ...args) => {
+          args.pop();
+          const p = args.pop();
+          const isConditionTag = regexParser(
+            `<c:\\w+[^>]*>%before%*</?${tagname}[^>]*>%after%*</c:\\w+[^>]*>`
+          ).test(m);
+
           if (p >= position) {
-            if (m.startsWith("</")) i--;
+            if (isConditionTag) {
+              return m;
+            } else if (m.includes("</")) i--;
             else i++;
 
-            if (!i) return "";
+            if (!i && !isRemoved) {
+              isRemoved = true;
+              return m.replace(regexParser(ct), "");
+            }
           }
           return m;
         });
