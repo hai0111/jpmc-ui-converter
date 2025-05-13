@@ -36,12 +36,12 @@ const ruleConfigs: IRuleConfig[] = [
       );
 
       str = str.addClasses(
-        regexParser("<th [^>]*>"),
+        regexParser("<th(?!e)[^>]*>"),
         "table__column table__column--border-right table__column--center"
       );
 
       str = str.addClasses(
-        regexParser("<td [^>]*>"),
+        regexParser("<td[^>]*>"),
         "table__column table__column--border-right table__column--center"
       );
 

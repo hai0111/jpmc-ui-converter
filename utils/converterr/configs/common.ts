@@ -4,10 +4,12 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<(dl|dt|dd)>`,
+    test: true,
   },
   {
     type: ERuleConfigType.DELETE,
     detected: `<div[^>]*content_main[^>]*">`,
+    test: true,
   },
   {
     type: ERuleConfigType.DELETE,
@@ -16,10 +18,28 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<div[^>]*table__container[^>]*>`,
+    test: true,
   },
   {
     type: ERuleConfigType.DELETE,
     detected: `<tbody[^>]*>`,
+  },
+  {
+    type: ERuleConfigType.DELETE,
+    detected: "<div[^>]*pager[^>]*>",
+  },
+  {
+    type: ERuleConfigType.DELETE,
+    detected: `<div[^>]*clear[^>]*">`,
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `<div[^>]*clear[^>]*"/>`,
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `<br[^>]*clear[^>]*>`,
+    dataReplaced: "",
   },
   {
     type: ERuleConfigType.EDIT,
@@ -93,15 +113,6 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected: `style="[^"]*?"`,
-    dataReplaced: "",
-  },
-  {
-    type: ERuleConfigType.EDIT,
-    detected: `<div[^>]*clear[^>]*>%space%*</div>`,
-  },
-  {
-    type: ERuleConfigType.EDIT,
-    detected: `<br[^>]*clear[^>]*>`,
     dataReplaced: "",
   },
   {
@@ -238,10 +249,6 @@ const rulesConfig: IRuleConfig[] = [
         %content%
       </li>
           `,
-  },
-  {
-    type: ERuleConfigType.DELETE,
-    detected: "<div[^>]*pager[^>]*>",
   },
   {
     type: ERuleConfigType.WRAP,

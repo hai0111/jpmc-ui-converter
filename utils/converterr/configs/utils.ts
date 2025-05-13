@@ -9,6 +9,7 @@ export interface IRuleConfig {
   isNested?: boolean;
   keepOriginOnMove?: boolean;
   detected: string;
+  test?: boolean;
   dataReplaced?: ((match: string, ...substring: string[]) => string) | string;
 }
 
