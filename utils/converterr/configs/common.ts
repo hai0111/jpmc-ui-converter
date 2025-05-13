@@ -4,7 +4,6 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<(dl|dt|dd)>`,
-    test: true,
   },
   {
     type: ERuleConfigType.DELETE,
@@ -112,6 +111,11 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
+    detected: 'style="\\$\\{[^\\}]*?\\}"',
+    dataReplaced: "",
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: `style="[^"]*?"`,
     dataReplaced: "",
   },
@@ -122,7 +126,7 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
-    detected: `<%--%any%+?--%>`,
+    detected: `<%--((?<!%any%*--%>)%any%)+\n((?<!%any%*--%>)%any%)+--%>`,
     dataReplaced: "",
   },
   {
