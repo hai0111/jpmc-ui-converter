@@ -3,6 +3,11 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
+    detected: ">%space%*</form:(?:textarea|checkbox)>",
+    dataReplaced: "/>",
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected:
       "<form:select(?:(?<![^>]*select__input)[^>])*(?:/>|>%any%*?</form:select>)",
     dataReplaced: (str) => {
@@ -93,7 +98,7 @@ ${
   {
     type: ERuleConfigType.EDIT,
     detected:
-      "(%before%*<label>[^<]*?<form:checkbox[^>]*?>%any%*?</form:checkbox>[^<]*?</label>%after%*)+",
+      "(%before%*<label>[^<]*?<form:checkbox[^>]*?(?:/>|>%any%*</form:checkbox>)[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "checkbox");
 

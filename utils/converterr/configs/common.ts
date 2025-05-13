@@ -107,7 +107,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected: `&nbsp;`,
-    dataReplaced: "",
+    dataReplaced: " ",
   },
   {
     type: ERuleConfigType.EDIT,
