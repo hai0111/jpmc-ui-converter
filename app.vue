@@ -3,13 +3,8 @@
     <UTabs color="neutral" :items="items" :ui="{ trigger: 'cursor-pointer' }">
       <template #content>
         <main class="flex flex-col gap-7 p-8">
-          <UFormField label="Configs">
-            <USelectMenu
-              v-model="converter.CONFIGS"
-              multiple
-              :items="configItems"
-              class="w-full"
-            />
+          <UFormField label="Layout">
+            <USelectMenu v-model="layout" :items="configItems" class="w-full" />
           </UFormField>
 
           <UFormField label="Suggestions">
@@ -78,13 +73,8 @@
       </template>
       <template #path>
         <main class="flex flex-col align-center gap-7 p-8">
-          <UFormField label="Configs">
-            <USelectMenu
-              v-model="converter.CONFIGS"
-              multiple
-              :items="configItems"
-              class="w-full"
-            />
+          <UFormField label="Layout">
+            <USelectMenu v-model="layout" :items="configItems" class="w-full" />
           </UFormField>
 
           <UFormField label="Path">
@@ -226,7 +216,7 @@ watch(
 const dataCookie = useCookie("data", {
   default: () =>
     ({
-      CONFIGS: [],
+      LAYOUT: "",
       CONTENT: "",
       PATH_INPUT: "",
       PATH_OUTPUT: "",
@@ -236,21 +226,18 @@ const dataCookie = useCookie("data", {
 });
 
 onMounted(() => {
-  converter.value.CONFIGS = dataCookie.value.CONFIGS;
   converter.value.CONTENT = dataCookie.value.CONTENT;
-  converter.value.CONFIGS = dataCookie.value.CONFIGS;
   converter.value.PATH_INPUT = dataCookie.value.PATH_INPUT;
   converter.value.PATH_OUTPUT = dataCookie.value.PATH_OUTPUT;
   converter.value.PATH_MATCH = dataCookie.value.PATH_MATCH;
   converter.value.IS_FORM_TABLE = dataCookie.value.IS_FORM_TABLE;
+  layout.value = dataCookie.value.LAYOUT;
 });
 
 watch(
   converter,
   () => {
-    dataCookie.value.CONFIGS = converter.value.CONFIGS;
     dataCookie.value.CONTENT = converter.value.CONTENT;
-    dataCookie.value.CONFIGS = converter.value.CONFIGS;
     dataCookie.value.PATH_INPUT = converter.value.PATH_INPUT;
     dataCookie.value.PATH_OUTPUT = converter.value.PATH_OUTPUT;
     dataCookie.value.PATH_MATCH = converter.value.PATH_MATCH;
@@ -259,5 +246,15 @@ watch(
   {
     deep: true,
   }
+);
+const layout = ref("");
+
+watch(
+  layout,
+  (val) => {
+    converter.value.CONFIGS = [val as any];
+    dataCookie.value.LAYOUT = layout.value;
+  },
+  { immediate: true }
 );
 </script>

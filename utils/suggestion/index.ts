@@ -1,3 +1,3 @@
-export * as list from "./list";
-export * as edit from "./edit";
-export * as common from "./common";
+export { default as list } from "./list";
+export { default as edit } from "./edit";
+export { default as common } from "./common";

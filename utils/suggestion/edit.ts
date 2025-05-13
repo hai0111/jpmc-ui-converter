@@ -1,9 +1,9 @@
-export const detailPageWrapper = `<div class="asis-content asis-content--edit"></div>`;
+const suggestions = {
+  "Edit --> Footer": `<div class="asis-content__footer">
+      <div class="asis-content__footer__block"></div>
+      <div class="asis-content__footer__block">
+      </div>
+  </div>`,
+};
 
-export const heading = `<h2 class="heading"></h2>`;
-
-export const footerDetailPage = `<div class="asis-content__footer">
-    <div class="asis-content__footer__block"></div>
-    <div class="asis-content__footer__block">
-    </div>
-</div>`;
+export default suggestions;

@@ -11,16 +11,15 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.DELETE,
+    detected: `<div[^>]*property_info_left[^>]*">`,
+  },
+  {
+    type: ERuleConfigType.DELETE,
     detected: `<div[^>]*table__container[^>]*>`,
   },
   {
     type: ERuleConfigType.DELETE,
     detected: `<tbody[^>]*>`,
-  },
-  {
-    type: ERuleConfigType.EDIT,
-    detected: `<br class="clear"/>`,
-    dataReplaced: "",
   },
   {
     type: ERuleConfigType.EDIT,
@@ -33,6 +32,7 @@ const rulesConfig: IRuleConfig[] = [
       "txt_\\w+",
       "ime_\\w+",
       "msg_box_conf",
+      'xmlns:m="http://mayaa.seasar.org"',
       "msg_error",
       "tr_not_fixed_row",
       "comm_sub_tbl",
@@ -96,12 +96,12 @@ const rulesConfig: IRuleConfig[] = [
     dataReplaced: "",
   },
   {
-    type: ERuleConfigType.DELETE,
-    detected: `<div[^>]*clear[^>]*">`,
+    type: ERuleConfigType.EDIT,
+    detected: `<div[^>]*clear[^>]*>%space%*</div>`,
   },
   {
     type: ERuleConfigType.EDIT,
-    detected: `<br class="clear">`,
+    detected: `<br[^>]*clear[^>]*>`,
     dataReplaced: "",
   },
   {
@@ -109,11 +109,11 @@ const rulesConfig: IRuleConfig[] = [
     detected: "btn_\\d+",
     dataReplaced: "btn btn--primary",
   },
-  // {
-  //   type: ERuleConfigType.EDIT,
-  //   detected: `<[%!]--(${anyRgx})+?--%?>`,
-  //   dataReplaced: "",
-  // },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `<%--%any%+?--%>`,
+    dataReplaced: "",
+  },
   {
     type: ERuleConfigType.EDIT,
     detected:
@@ -155,13 +155,11 @@ const rulesConfig: IRuleConfig[] = [
       `;
     },
   },
-
   {
     type: ERuleConfigType.MOVE,
     detected: "<c:import[^>]*section_title[^>]*>%any%+?</c:import>",
     dataReplaced: "(?<=<!-- main_menu stop -->)",
   },
-
   {
     type: ERuleConfigType.EDIT,
     detected: `<ol%any%*?</ol>`,
@@ -176,7 +174,6 @@ const rulesConfig: IRuleConfig[] = [
         `   </div>
          </div>`
       );
-
       let isBeforeCurrent = true;
       str = str.replace(regexParser("<li[^>]*>%any%*?</li>"), (li) => {
         if (li.includes("current")) {
@@ -191,17 +188,13 @@ const rulesConfig: IRuleConfig[] = [
             "stepper__item stepper__item--completed"
           );
         else li = li.addClasses(/<li[^>]*>/, "stepper__item");
-
         li = li.replace(/<\/?(a|em)[^>]*>/g, "");
         return li;
       });
-
       str = str.replace(/li|ol/g, "div");
-
       return str;
     },
   },
-
   /* <<------- Pagination */
   {
     type: ERuleConfigType.EDIT,

@@ -24,11 +24,6 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
-    detected: "btn--primary",
-    dataReplaced: "",
-  },
-  {
-    type: ERuleConfigType.EDIT,
     detected: "<br[^>]*>",
     dataReplaced: "",
   },

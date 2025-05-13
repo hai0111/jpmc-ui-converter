@@ -24,23 +24,43 @@ const rulesConfig: IRuleConfig[] = [
     type: ERuleConfigType.EDIT,
     detected:
       "<form:input(?:(?<![^>]*text-input__input)[^>])*(?:/>|>%any%*?</form:input>)",
-    dataReplaced: (str) => {
+    dataReplaced: (str, ...args) => {
+      const content = args.pop() || "";
       const path = str.match(/(?<=path=").+?(?=")/)?.[0] || "";
-
       const isHasMoney = /cssClass="[^>"]*money[^>"]*"/.test(str);
+      const isHasOriginError = new RegExp(
+        `<form:errors((?<![^>]*#custom)[^>])*${path.toNormalChar()}((?<![^>]*#custom)[^>])*>`
+      ).test(content);
+
+      const customPath = path.includes("$") ? "pathName" : null;
 
       str = str.addClasses(
         regexParser("<form:input[^>]*>"),
         "text-input__input"
       );
 
-      let result = `<div class="text-input text-input--small${
+      let errorClass = "";
+
+      if (isHasOriginError)
+        errorClass = `\${errors.hasFieldErrors(${
+          customPath || `'${path}'`
+        }) ? 'text-input--error' : ''}`;
+
+      let result = `${
+        isHasOriginError && customPath
+          ? `<c:set var="${customPath}" value="${path}"/>\n`
+          : ""
+      }<div class="text-input text-input--small${
         isHasMoney ? " text-input--text-right" : ""
-      } \${errors.hasFieldErrors('${path}') ? 'text-input--error' : ''}">
+      } ${errorClass}">
       <div class="text-input__container">
       ${str}
       </div>
-      <form:errors #custom path="${path}" cssClass="form-error"/>
+${
+  isHasOriginError
+    ? `<form:errors #custom path="${path}" cssClass="form-error"/>`
+    : ""
+}
     </div>`;
 
       return result;
@@ -73,9 +93,11 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected:
-      "(%before%*<label>[^<]*?<form:checkbox[^>]*?(?:/>|>%any%*?</form:checkbox>)[^<]*?</label>%after%*)+",
+      "(%before%*<label>[^<]*?<form:checkbox[^>]*?>%any%*?</form:checkbox>[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "checkbox");
+
+      const path = str.match(/(?<=path=").+?(?=")/)?.[0] || "";
 
       str = str.addClasses(
         regexParser("<form:checkbox[^>]*>"),
@@ -94,6 +116,7 @@ const rulesConfig: IRuleConfig[] = [
   <div class="checkbox__group__inner">
     ${str}
   </div>
+  <form:errors #custom path="${path}" cssClass="form-error"/>
 </fieldset>
       `;
 
@@ -106,6 +129,8 @@ const rulesConfig: IRuleConfig[] = [
       "(%before%*<label>[^<]*?<form:radiobutton[^>]*?(?:/>|>%any%*</form:radiobutton>)[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "radio");
+
+      const path = str.match(/(?<=path=").+?(?=")/)?.[0] || "";
 
       str = str.addClasses(
         regexParser("<form:radiobutton[^>]*>"),
@@ -124,6 +149,7 @@ const rulesConfig: IRuleConfig[] = [
   <div class="radio__group__inner">
     ${str}
   </div>
+  <form:errors #custom path="${path}" cssClass="form-error"/>
 </fieldset>
       `;
 
