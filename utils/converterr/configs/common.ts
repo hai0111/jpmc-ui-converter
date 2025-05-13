@@ -124,11 +124,11 @@ const rulesConfig: IRuleConfig[] = [
     detected: "btn_\\d+",
     dataReplaced: "btn btn--primary",
   },
-  {
-    type: ERuleConfigType.EDIT,
-    detected: `<%--((?<!%any%*--%>)%any%)+\n((?<!%any%*--%>)%any%)+--%>`,
-    dataReplaced: "",
-  },
+  // {
+  //   type: ERuleConfigType.EDIT,
+  //   detected: `<%--((?<!%any%*--%>)%any%)+\n((?<!%any%*--%>)%any%)+--%>`,
+  //   dataReplaced: "",
+  // },
   {
     type: ERuleConfigType.EDIT,
     detected:
