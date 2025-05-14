@@ -8,7 +8,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<div[^>]*content_main[^>]*">`,
-    test: true,
+    // test: true,
   },
   {
     type: ERuleConfigType.DELETE,
@@ -17,7 +17,7 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<div[^>]*table__container[^>]*>`,
-    test: true,
+    // test: true,
   },
   {
     type: ERuleConfigType.DELETE,
@@ -29,15 +29,18 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.DELETE,
-    detected: `<div[^>]*clear[^>]*">`,
+    detected: `<div class="clear">`,
+    test: true,
   },
   {
     type: ERuleConfigType.EDIT,
     detected: `<div[^>]*clear[^>]*"/>`,
+    test: true,
   },
   {
     type: ERuleConfigType.EDIT,
     detected: `<br[^>]*clear[^>]*>`,
+    test: true,
     dataReplaced: "",
   },
   {
@@ -126,7 +129,7 @@ const rulesConfig: IRuleConfig[] = [
   },
   // {
   //   type: ERuleConfigType.EDIT,
-  //   detected: `<%--((?<!%any%*--%>)%any%)+\n((?<!%any%*--%>)%any%)+--%>`,
+  //   detected: `<%--((?<!%any%*?--%?>)%any%)+\n((?<!%any%*--%?>)%any%)+--%>`,
   //   dataReplaced: "",
   // },
   {

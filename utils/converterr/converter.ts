@@ -229,7 +229,7 @@ export default class Converter {
       openTags?.forEach((ot) => {
         let position: number;
 
-        content = content.replace(ot, (_, p) => {
+        content = content.replace(ot, (m, p) => {
           position = p;
           return "";
         });
@@ -243,7 +243,7 @@ export default class Converter {
         let i = 1;
         content = content.replace(regexParser(regex), (m, ...args) => {
           args.pop();
-          const p = args.pop();
+          const p = args.pop() + Math.max(m.indexOf("</"), 0);
           const isConditionTag = regexParser(
             `<c:\\w+[^>]*>%before%*</?${tagname}[^>]*>%after%*</c:\\w+[^>]*>`
           ).test(m);
@@ -259,6 +259,7 @@ export default class Converter {
               return m.replace(regexParser(ct), "");
             }
           }
+
           return m;
         });
       });
