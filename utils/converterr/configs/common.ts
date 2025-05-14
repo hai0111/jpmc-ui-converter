@@ -142,6 +142,11 @@ const rulesConfig: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
+    detected: "<a[^>]*>",
+    dataReplaced: "addClass:text--secondary",
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: "/WEB-INF/view/common/(?!asis)",
     dataReplaced: "/WEB-INF/view/common/asis/",
   },
