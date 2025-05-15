@@ -3,22 +3,44 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
-    detected: ">%space%*</form:(?:textarea|checkbox)>",
+    detected: ">%space%*</form:(?:textarea|checkbox|input)>",
     dataReplaced: "/>",
   },
   {
     type: ERuleConfigType.EDIT,
     detected:
       "<form:select(?:(?<![^>]*select__input)[^>])*(?:/>|>%any%*?</form:select>)",
-    dataReplaced: (str) => {
+    dataReplaced: (str, ...args) => {
+      const content = args.pop() || "";
       const path = str.match(/(?<=path=").+?(?=")/)?.[0] || "";
+      const isHasOriginError = new RegExp(
+        `<form:errors((?<![^>]*#custom)[^>])*${path.toNormalChar()}((?<![^>]*#custom)[^>])*>`
+      ).test(content);
+
+      const customPath = path.includes("$") ? "pathName" : null;
+
       str = str.addClasses(regexParser("<form:select[^>]*>"), "select__input");
 
-      let result = `<div class="select select--small \${errors.hasFieldErrors('${path}') ? 'select--error' : ''}">
+      let errorClass = "";
+
+      if (isHasOriginError)
+        errorClass = `\${errors.hasFieldErrors(${
+          customPath || `'${path}'`
+        }) ? 'select--error' : ''}`;
+
+      let result = `${
+        isHasOriginError && customPath
+          ? `<c:set var="${customPath}" value="${path}"/>\n`
+          : ""
+      }<div class="select select--small ${errorClass}">
       <div class="select__container">
       ${str}
       </div>
-      <form:errors #custom path="${path}" cssClass="form-error"/>
+${
+  isHasOriginError
+    ? `<form:errors #custom path="${path}" cssClass="form-error"/>`
+    : ""
+}
     </div>`;
 
       return result;
