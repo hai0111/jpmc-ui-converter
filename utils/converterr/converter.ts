@@ -85,7 +85,7 @@ String.prototype.replaceElements = function (
   const els = selectAllElement(result, pattern);
 
   els.forEach((el) => {
-    result = result.replace(regexParser(el.toNormalChar()), replacer);
+    result = result.replaceAll(el.toNormalChar(), replacer);
   });
 
   return result;

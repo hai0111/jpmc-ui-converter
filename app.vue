@@ -226,7 +226,6 @@ const dataCookie = useCookie("data", {
 });
 
 onMounted(() => {
-  converter.value.CONTENT = decodeURIComponent(dataCookie.value.CONTENT);
   converter.value.PATH_INPUT = dataCookie.value.PATH_INPUT;
   converter.value.PATH_OUTPUT = dataCookie.value.PATH_OUTPUT;
   converter.value.PATH_MATCH = dataCookie.value.PATH_MATCH;
@@ -237,7 +236,6 @@ onMounted(() => {
 watch(
   converter,
   () => {
-    dataCookie.value.CONTENT = encodeURIComponent(converter.value.CONTENT);
     dataCookie.value.PATH_INPUT = converter.value.PATH_INPUT;
     dataCookie.value.PATH_OUTPUT = converter.value.PATH_OUTPUT;
     dataCookie.value.PATH_MATCH = converter.value.PATH_MATCH;
@@ -247,6 +245,20 @@ watch(
     deep: true,
   }
 );
+
+watch(
+  () => converter.value.CONTENT,
+  (val) => {
+    localStorage.setItem("content", encodeURIComponent(val || ""));
+  }
+);
+
+onMounted(() => {
+  converter.value.CONTENT = decodeURIComponent(
+    localStorage.getItem("content") || ""
+  );
+});
+
 const layout = ref("");
 
 watch(

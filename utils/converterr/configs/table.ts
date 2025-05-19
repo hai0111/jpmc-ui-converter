@@ -3,6 +3,13 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 const ruleConfigs: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
+    detected: "tag:<table[^>]*>",
+    dataReplaced: (str) => {
+      return str;
+    },
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: "(?<=(?:<table[^>]*>|</thead>))(?=%before%*<tr)",
     dataReplaced: `
     <tbody>

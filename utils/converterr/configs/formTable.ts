@@ -1,10 +1,4 @@
-import {
-  ERuleConfigType,
-  regexParser,
-  selectAllElement,
-  selectElement,
-  type IRuleConfig,
-} from "./utils";
+import { ERuleConfigType, regexParser, type IRuleConfig } from "./utils";
 
 const ruleConfigs: IRuleConfig[] = [
   {
