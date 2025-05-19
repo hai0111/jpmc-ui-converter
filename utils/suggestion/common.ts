@@ -5,13 +5,20 @@ const suggestions = {
   <tr class="table__thead__row">
   </tr>
 </thead>`,
-  "Table --> Sorter": `<div class="table__column__sorter">
-    <span class="sort_arrow_asc table__column__sorter__icon \${listForm.sort_column == '5' ? 'table__column__sorter__icon--active' : ''}">▲</span>
-    <span class="sort_arrow_desc table__column__sorter__icon \${listForm.sort_column == '-5' ? 'table__column__sorter__icon--active' : ''}">▼</span>
-</div>`,
-  "Layout 50/50": `<div class="layout layout--gap-32">
-    <div class="layout--flex-grow-1 layout layout--column layout--gap-32"></div>
-    <div class="layout--flex-grow-1 layout layout--column layout--gap-32"></div>
+  "Common --> Card": `<div class="card">
+    <div class="card__header">
+        <h5 class="heading"></h5>
+        <div class="card__header__item">
+        </div>
+    </div>
+    <div class="card__body">
+        <div class="card__body__content">
+        </div>
+    </div>
+    <div class="card__footer">
+        <div class="card__footer__item">
+        </div>
+    </div>
 </div>`,
 };
 

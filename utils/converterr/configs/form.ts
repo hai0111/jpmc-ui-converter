@@ -153,6 +153,32 @@ ${
   {
     type: ERuleConfigType.EDIT,
     detected:
+      "<form:checkbox((?<![^>]*checkbox__input)[^>])*?(?:/>|>%any%*</form:checkbox>)",
+    dataReplaced: (str) => {
+      str = str.addClasses(regexParser("<label[^>]*>"), "checkbox");
+
+      const path = str.match(/(?<=path=").+?(?=")/)?.[0] || "";
+
+      str = str.addClasses(
+        regexParser("<form:checkbox[^>]*>"),
+        "checkbox__input"
+      );
+
+      str = `
+<fieldset class="checkbox__group">
+  <div class="checkbox__group__inner">
+    ${str}
+  </div>
+  <form:errors #custom path="${path}" cssClass="form-error"/>
+</fieldset>
+      `;
+
+      return str;
+    },
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected:
       "(%before%*<label>[^<]*?<form:radiobutton[^>]*?(?:/>|>%any%*</form:radiobutton>)[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "radio");

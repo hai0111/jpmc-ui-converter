@@ -75,45 +75,6 @@ const ruleConfigs: IRuleConfig[] = [
       "<c:choose>%space%*<c:when[^>]*count % 2 == 0[^>]*>(%any%*?)</c:when>%any%*?</c:choose>",
     dataReplaced: "$1",
   },
-  {
-    type: ERuleConfigType.EDIT,
-    detected:
-      "<c:if[^>]*>%space%*<[^>]*>%space%*[▲▼]%space%*</[^>]*>%space%*</c:if>",
-    dataReplaced: (str) => {
-      str = str.replace(regexParser("(?<=</?)\\w+(?=[>\\s])"), "span");
-
-      let condition: string =
-        str.match(regexParser('(?<=test=")[^"]+(?=")'))?.[0] || "";
-
-      condition = condition.replace(regexParser("[${}]"), "");
-
-      str = str.addClasses(
-        regexParser("<[^>]*>%space%*[▲▼]%space%*</[^>]*>"),
-        `table__column__sorter__icon${
-          condition
-            ? ` \${${condition} ? 'table__column__sorter__icon--active' : ''}`
-            : ""
-        }`
-      );
-
-      str = str.replace(regexParser("<c:if[^>]*>|</c:if>"), "");
-
-      return str;
-    },
-  },
-  {
-    type: ERuleConfigType.EDIT,
-    detected:
-      "<c:if[^>]*>%space%*<[^>]*>%space%*[▽△]%space%*</[^>]*>%space%*</c:if>",
-    dataReplaced: "",
-  },
-  {
-    type: ERuleConfigType.WRAP,
-    detected: "((?:%before%*<span[^>]*>%space%*[▲▼]%space%*</span>%after%*)+)",
-    dataReplaced: `<div class="table__column__sorter">
-      $1
-    </div>`,
-  },
 ];
 
 export default ruleConfigs;

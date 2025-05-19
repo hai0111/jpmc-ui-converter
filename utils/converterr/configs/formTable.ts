@@ -16,43 +16,6 @@ const ruleConfigs: IRuleConfig[] = [
 
       str = str.replace(regexParser("</?(thead|tbody|tfoot)[^>]*>"), "");
 
-      const TRsHasRowSpan = selectAllElement(
-        str,
-        "<tr((?<!%any%*</tr>)%any%)+?rowspan"
-      );
-
-      TRsHasRowSpan.forEach((tr) => {
-        let regex = tr.toNormalChar();
-        let result = "";
-        let count = Number(tr.match(/(?<=rowspan=")\d+(?=")/) || 0);
-
-        while (count > 0) {
-          const nextTR = selectElement(str, `(?<=${regex})%before%*<tr[^>]*>`);
-          result += nextTR;
-          regex = nextTR.toNormalChar();
-          count--;
-        }
-
-        const dataReplace = tr
-          .replace(
-            /(?=<\/tr>$)/,
-            `<div class="col-19">
-          ${result}
-          </div>`
-          )
-          .replace(
-            regexParser(
-              '(?<=rowspan="\\d+"[^>]*>%any%+?</td>)((%before%*<td[^>]*>%any%+?</td>%after%*)+)'
-            ),
-            "<tr>$1</tr>"
-          );
-
-        console.log(dataReplace);
-
-        str = str.replace(result, "");
-        str = str.replace(tr, dataReplace);
-      });
-
       str = str.addClasses(regexParser("<tr[^>]*[^>]*>"), "form-table__row");
 
       str = str.addClasses(
