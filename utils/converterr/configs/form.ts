@@ -2,6 +2,10 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 
 const rulesConfig: IRuleConfig[] = [
   {
+    type: ERuleConfigType.DELETE,
+    detected: "<label%space%*>",
+  },
+  {
     type: ERuleConfigType.EDIT,
     detected: ">%space%*</form:(?:textarea|checkbox|input)>",
     dataReplaced: "/>",
@@ -179,7 +183,7 @@ ${
   {
     type: ERuleConfigType.EDIT,
     detected:
-      "(%before%*<label>[^<]*?<form:radiobutton[^>]*?(?:/>|>%any%*</form:radiobutton>)[^<]*?</label>%after%*)+",
+      "(%before%*<label[^>]*>[^<]*?<form:radiobutton[^>]*?(?:/>|>%any%*</form:radiobutton>)[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "radio");
 

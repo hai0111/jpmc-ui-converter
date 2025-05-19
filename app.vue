@@ -226,7 +226,7 @@ const dataCookie = useCookie("data", {
 });
 
 onMounted(() => {
-  converter.value.CONTENT = dataCookie.value.CONTENT;
+  converter.value.CONTENT = decodeURIComponent(dataCookie.value.CONTENT);
   converter.value.PATH_INPUT = dataCookie.value.PATH_INPUT;
   converter.value.PATH_OUTPUT = dataCookie.value.PATH_OUTPUT;
   converter.value.PATH_MATCH = dataCookie.value.PATH_MATCH;
@@ -237,7 +237,7 @@ onMounted(() => {
 watch(
   converter,
   () => {
-    dataCookie.value.CONTENT = converter.value.CONTENT;
+    dataCookie.value.CONTENT = encodeURIComponent(converter.value.CONTENT);
     dataCookie.value.PATH_INPUT = converter.value.PATH_INPUT;
     dataCookie.value.PATH_OUTPUT = converter.value.PATH_OUTPUT;
     dataCookie.value.PATH_MATCH = converter.value.PATH_MATCH;
