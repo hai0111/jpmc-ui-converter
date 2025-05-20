@@ -49,12 +49,10 @@ String.prototype.addClasses = function (pattern, classes: string) {
 
 String.prototype.replaceClasses = function (pattern, classes: string) {
   let result = this.toString();
-
   result = result.replace(pattern, (str) => {
     const isHasClass = /class="[^"]*"/.test(str);
     const isHasCssClass = /cssClass="[^"]*"/.test(str);
     const isJspTag = /<\w+:\w+/.test(str);
-
     if (isHasClass) {
       str = str.replace(/class="([^"]*)"/g, `class="${classes}"`);
     } else if (isHasCssClass) {
@@ -85,7 +83,7 @@ String.prototype.replaceElements = function (
   const els = selectAllElement(result, pattern);
 
   els.forEach((el) => {
-    result = result.replaceAll(el.toNormalChar(), replacer);
+    result = result.replaceAll(el, replacer);
   });
 
   return result;
@@ -279,29 +277,29 @@ export default class Converter {
         ) {
           const classes = er.dataReplaced.replace("addClass:", "");
           content = content.addClasses(regex, classes);
-          return;
-        }
-
-        if (
+        } else if (
           typeof er.dataReplaced === "string" &&
           er.dataReplaced.includes("replaceClass:")
         ) {
           const classes = er.dataReplaced.replace("replaceClass:", "");
           content = content.replaceClasses(regex, classes);
-          return;
-        }
-
-        if (typeof er.detected === "string" && er.detected.includes("tag:")) {
+        } else if (
+          typeof er.detected === "string" &&
+          er.detected.includes("tag:")
+        ) {
           const detecter = er.detected.replace("tag:", "");
           content = content.replaceElements(
             detecter,
             getReplacer(er.dataReplaced) as any
           );
           return;
+        } else {
+          content = content.replace(regex, getReplacer(er.dataReplaced) as any);
         }
 
-        content = content.replace(regex, getReplacer(er.dataReplaced) as any);
-        isLeftover = regex.test(content);
+        isLeftover = regexParser(er.detected, { isGlobal: false }).test(
+          content
+        );
       } while (isLeftover && er.isNested);
     });
 

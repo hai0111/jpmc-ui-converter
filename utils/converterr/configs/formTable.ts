@@ -1,4 +1,9 @@
-import { ERuleConfigType, regexParser, type IRuleConfig } from "./utils";
+import {
+  ERuleConfigType,
+  regexParser,
+  selectAllElement,
+  type IRuleConfig,
+} from "./utils";
 
 const ruleConfigs: IRuleConfig[] = [
   {
@@ -12,26 +17,38 @@ const ruleConfigs: IRuleConfig[] = [
 
       str = str.addClasses(regexParser("<tr[^>]*[^>]*>"), "form-table__row");
 
-      str = str.addClasses(
-        regexParser(
-          "(?<=<tr[^>]*form-table__row[^>]*>(%space%+)?)<(?:td|th)[^>]*>"
-        ),
-        "form-table__label"
-      );
+      const trs = selectAllElement(str, "<tr[^>]*>");
 
-      str = str.addClasses(
-        regexParser("<(?:td|th)((?![^>]*form-table__label)[^>])*>"),
-        "form-table__control"
-      );
+      trs.forEach((tr) => {
+        let odd = true;
+        let trReplacer = tr;
+        const cells = selectAllElement(tr, "<(?:td|th)[^>]*>");
+        cells.forEach((cell) => {
+          const cellReplacer = cell.addClasses(
+            regexParser("<(?:td|th)[^>]*>"),
+            odd ? "form-table__label" : "form-table__control"
+          );
+          trReplacer = trReplacer.replace(cell, cellReplacer);
+          odd = !odd;
+        });
+        str = str.replace(tr, trReplacer);
+      });
 
       str = str.replace(
         regexParser(
           "(?<=<(?:td|th)[^>]*form-table__control[^>]*>)(%any%*?)(?=</(?:td|th)>)"
         ),
-        `<div class="form-table__input">
-          $1
-  </div>
-  `
+        (m, p1) => {
+          p1 = p1.replace(
+            regexParser("(?<=<(?:td|th)[^>]*form-table__control[^>]*>)"),
+            '<div class="form-table__input">'
+          );
+
+          return `
+          <div class="form-table__input">
+          ${p1}
+  </div>`;
+        }
       );
 
       str = str.replace(regexParser("</(table|tr|td|th)>"), "</div>");

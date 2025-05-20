@@ -1,5 +1,3 @@
-import { el } from "@nuxt/ui/runtime/locale/index.js";
-
 export enum ERuleConfigType {
   DELETE,
   EDIT,
@@ -42,23 +40,35 @@ export const selectElement = (
 
   origin = origin.slice(index);
 
-  const firsMatch = regexStr.match(regexParser(regexStr, { isGlobal: false }));
+  const firsMatch = origin.match(
+    regexParser(regexStr.toNormalChar(), { isGlobal: false })
+  );
 
   if (!firsMatch) return null;
+  const firsMatchStr = firsMatch[0];
 
-  const openTagRgx = getOpenTagRgx(firsMatch[0]);
-  const closeTagRgx = getCloseTagRgx(firsMatch[0]);
+  const tagName = firsMatchStr
+    .toNormalChar()
+    .match(/(?<=<)\w+(?=[\s>])/)?.[0] as string;
 
-  let regex = openTagRgx;
+  const startPoint = firsMatchStr;
+  const endPoint = `</${tagName}[^>]*>(?:%after%|</c:\\w+[^>]*>)*`;
+
+  const openTagRgx = getOpenTagRgx(firsMatchStr);
+
+  const closeTagRgx = getCloseTagRgx(firsMatchStr);
+
+  let regex = startPoint.toNormalChar();
 
   do {
-    regex += `%any%*?${closeTagRgx}`;
-    result = origin.match(regexParser(regex, { isGlobal: false }))?.[0] || "";
+    regex += `%any%*?${endPoint}`;
+    result = origin.match(regexParser(regex, { isGlobal: false }))?.[0] || null;
+    if (!result) break;
+
     const openTagCount = result
       .match(regexParser(`(${openTagRgx})+`))
       ?.reduce((result, str) => {
         let increaseNumber = 0;
-
         str = str.replace(
           regexParser(
             `(%before%*<c:[^>]*>${openTagRgx}</c:[^>]*>%after%*){2,}`
@@ -121,28 +131,32 @@ export const selectAllElement = (origin: string, regexStr: string) => {
     matched = origin.match(regexParser(regexStr, { isGlobal: false }));
 
     if (!matched) break;
-    const matchedStr = matched[0].toNormalChar();
+
+    const matchedStr = origin.match(
+      regexParser(
+        `(?:%before%|<c:\\w+[^>]*>)*${matched[0].toNormalChar()}(?:%after%|</c:\\w+[^>]*>)*`,
+        { isGlobal: false }
+      )
+    )![0];
 
     const index = (matched.index || 0) + matched[0].length;
 
     const element = selectElement(origin, matchedStr);
 
-    origin = origin.slice(index);
-
     if (element) {
-      console.log(element);
-
       result.push(element);
       origin = origin.replace(element, "");
-    }
+    } else origin = origin.slice(index);
   } while (matched);
 
-  return result || null;
+  return result;
 };
 
 export const getOpenTagRgx = (
   regexStr: string,
-  tagName: string | undefined = regexStr.match(/(?<=<)\w+/)?.[0] as string
+  tagName: string | undefined = regexStr.match(
+    /(?<=<)\w+(?=[\s>])/
+  )?.[0] as string
 ) => {
   let regex = `(?:%before%|<c:\\w+[^>]*>)*<${tagName}[^>]*>(?:%after%|</c:\\w+[^>]*>)*`;
   return regex;
@@ -150,7 +164,9 @@ export const getOpenTagRgx = (
 
 export const getCloseTagRgx = (
   regexStr: string,
-  tagName: string | undefined = regexStr.match(/(?<=<)\w+/)?.[0] as string
+  tagName: string | undefined = regexStr.match(
+    /(?<=<)\w+(?=[\s>])/
+  )?.[0] as string
 ) => {
   let regex = `(?:%before%|<c:\\w+[^>]*>)*</${tagName}[^>]*>(?:%after%|</c:\\w+[^>]*>)*`;
   return regex;
