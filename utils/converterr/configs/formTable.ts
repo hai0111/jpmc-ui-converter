@@ -30,6 +30,7 @@ const ruleConfigs: IRuleConfig[] = [
           );
           trReplacer = trReplacer.replace(cell, cellReplacer);
           odd = !odd;
+          if (cell.includes("rowspan")) odd = true;
         });
         str = str.replace(tr, trReplacer);
       });
