@@ -71,6 +71,11 @@ const ruleConfigs: IRuleConfig[] = [
       "<c:choose>%space%*<c:when[^>]*count % 2 == 0[^>]*>(%any%*?)</c:when>%any%*?</c:choose>",
     dataReplaced: "$1",
   },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "tbl_header[\\w_-\\d]*",
+    dataReplaced: "",
+  },
 ];
 
 export default ruleConfigs;

@@ -3,6 +3,11 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 const ruleConfigs: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
+    detected: "tbl_header[\\w_-\\d]*",
+    dataReplaced: "",
+  },
+  {
+    type: ERuleConfigType.EDIT,
     detected: "tag:<table[^>]*>",
     dataReplaced: (str) => {
       return str;
@@ -81,6 +86,13 @@ const ruleConfigs: IRuleConfig[] = [
     detected:
       "<c:choose>%space%*<c:when[^>]*count % 2 == 0[^>]*>(%any%*?)</c:when>%any%*?</c:choose>",
     dataReplaced: "$1",
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected:
+      "table__column--border-right(?=((?<!%any%*</t[dh]>)%any%)+</t[dh]>%after%*</tr>)",
+    dataReplaced: "",
+    test: true,
   },
 ];
 

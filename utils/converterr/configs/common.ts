@@ -8,7 +8,6 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<div[^>]*content_main[^>]*">`,
-    // test: true,
   },
   {
     type: ERuleConfigType.DELETE,
@@ -17,7 +16,6 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<div[^>]*table__container[^>]*>`,
-    // test: true,
   },
   {
     type: ERuleConfigType.DELETE,
@@ -30,17 +28,14 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.DELETE,
     detected: `<div class="clear">`,
-    test: true,
   },
   {
     type: ERuleConfigType.EDIT,
     detected: `<div[^>]*clear[^>]*"/>`,
-    test: true,
   },
   {
     type: ERuleConfigType.EDIT,
     detected: `<br[^>]*clear[^>]*>`,
-    test: true,
     dataReplaced: "",
   },
   {
@@ -69,12 +64,10 @@ const rulesConfig: IRuleConfig[] = [
       "td_top",
       "dot_top",
       "dot_bottom",
-      "tbl_header_center",
-      "tbl_header[\\w_-\\d]*",
       "comm_tbl[\\w_-\\d]*",
       "no_border[\\w_-\\d]*",
-      '(?<=["\\s])table__[\\w_-\\d]+',
-      '(?<=class="[^"]*)(?<=["\\s])table(?=[^"]*")',
+      "\btable__[\\w_-\\d]+",
+      '(?<=class="[^"]*)\btable\b(?=[^"]*")',
     ].join("|"),
     dataReplaced: "",
   },
@@ -128,11 +121,25 @@ const rulesConfig: IRuleConfig[] = [
     detected: "btn_\\d+",
     dataReplaced: "btn btn--primary",
   },
-  // {
-  //   type: ERuleConfigType.EDIT,
-  //   detected: `<%--((?<!%any%*?--%?>)%any%)+\n((?<!%any%*--%?>)%any%)+--%>`,
-  //   dataReplaced: "",
-  // },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "<\\w+[^>]*btn--primary[^>]*>",
+    dataReplaced: (str) => {
+      if (/delete|reset/i.test(str))
+        str = str.replace("btn--primary", "btn--danger");
+
+      if (/submit|regist/i.test(str))
+        str = str.replace("btn--primary", "btn--tertiary");
+      return str;
+    },
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `<%--((?<!%any%*?--%?>)%any%)+--%>`,
+    dataReplaced: (str) => {
+      return /<\/?\w+/.test(str) ? "" : str;
+    },
+  },
   {
     type: ERuleConfigType.EDIT,
     detected:
