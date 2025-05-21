@@ -128,7 +128,7 @@ const rulesConfig: IRuleConfig[] = [
       if (/delete|reset/i.test(str))
         str = str.replace("btn--primary", "btn--danger");
 
-      if (/submit|regist/i.test(str))
+      if (/submit|regist|select/i.test(str))
         str = str.replace("btn--primary", "btn--tertiary");
       return str;
     },
