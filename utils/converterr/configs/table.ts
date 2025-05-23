@@ -15,7 +15,7 @@ const ruleConfigs: IRuleConfig[] = [
   },
   {
     type: ERuleConfigType.EDIT,
-    detected: "(?<=(?:<table[^>]*>|</thead>))(?=%before%*<tr)",
+    detected: "(?<=(?:<table[^>]*>|</thead>))(?=%after%*%before%*<tr)",
     dataReplaced: `
     <tbody>
   `,
@@ -37,13 +37,22 @@ const ruleConfigs: IRuleConfig[] = [
 
       str = str.addClasses(regexParser("<tbody[^>]*>"), "table__tbody");
 
+      str = str.addClasses(regexParser("<tfoot[^>]*>"), "table__tfoot");
+
       str = str.addClasses(
         regexParser("(?<=<thead[^>]*>((?<!%any%*</thead>)%any%)*)<tr[^>]*>"),
         "table__thead__row"
       );
 
       str = str.addClasses(
-        regexParser("(?<!<thead[^>]*>((?<!%any%*</thead>)%any%)*)<tr[^>]*>"),
+        regexParser("(?<=<tfoot[^>]*>((?<!%any%*</tfoot>)%any%)*)<tr[^>]*>"),
+        "table__tfoot__row"
+      );
+
+      str = str.addClasses(
+        regexParser(
+          "(?<!<(?:thead|tfoot)[^>]*>((?<!%any%*</(?:thead|tfoot)>)%any%)*)<tr[^>]*>"
+        ),
         "table__tbody__row"
       );
 
@@ -80,6 +89,14 @@ const ruleConfigs: IRuleConfig[] = [
     dataReplaced: `
     </div>
   `,
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "<t[hd][^>]*money[^>]*>",
+    dataReplaced: (str) => {
+      str.replace("table__column--center", "table__column--right");
+      return str;
+    },
   },
   {
     type: ERuleConfigType.EDIT,

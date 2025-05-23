@@ -53,6 +53,22 @@ ${
 
   {
     type: ERuleConfigType.EDIT,
+    detected: "<select(?:(?<![^>]*select__input)[^>])*(?:/>|>%any%*?</select>)",
+    dataReplaced: (str) => {
+      str = str.addClasses(regexParser("<select[^>]*>"), "select__input");
+
+      let result = `<div class="select select--small">
+      <div class="select__container">
+      ${str}
+      </div>
+    </div>`;
+
+      return result;
+    },
+  },
+
+  {
+    type: ERuleConfigType.EDIT,
     detected:
       "<form:input(?:(?<![^>]*text-input__input)[^>])*(?:/>|>%any%*?</form:input>)",
     dataReplaced: (str, ...args) => {
@@ -115,6 +131,26 @@ ${
       ${str}
       </div>
       <form:errors #custom path="${path}" cssClass="form-error"/>
+    </div>`;
+
+      return result;
+    },
+  },
+
+  {
+    type: ERuleConfigType.EDIT,
+    detected:
+      "<textarea(?:(?<![^>]*textarea__textarea)[^>])*(?:/>|>%any%*?</textarea>)",
+    dataReplaced: (str) => {
+      str = str.addClasses(
+        regexParser("<textarea[^>]*>"),
+        "textarea__textarea"
+      );
+
+      let result = `<div class="textarea textarea--width-full">
+      <div class="textarea__container">
+      ${str}
+      </div>
     </div>`;
 
       return result;

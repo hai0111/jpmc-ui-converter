@@ -66,8 +66,8 @@ const rulesConfig: IRuleConfig[] = [
       "dot_bottom",
       "comm_tbl[\\w_-\\d]*",
       "no_border[\\w_-\\d]*",
-      "\btable__[\\w_-\\d]+",
-      '(?<=class="[^"]*)\btable\b(?=[^"]*")',
+      '(?<=["\\s])table__[\\w_-\\d]+',
+      '(?<=class="[^"]*)(?<=["\\s])table(?=[^"]*")',
     ].join("|"),
     dataReplaced: "",
   },
@@ -130,6 +130,10 @@ const rulesConfig: IRuleConfig[] = [
 
       if (/submit|regist|select/i.test(str))
         str = str.replace("btn--primary", "btn--tertiary");
+
+      if (/close/i.test(str))
+        str = str.replace("btn--primary", "btn--secondary");
+
       return str;
     },
   },
