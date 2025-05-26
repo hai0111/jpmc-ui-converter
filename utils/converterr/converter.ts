@@ -15,6 +15,7 @@ declare global {
     replaceClasses(pattern: string | RegExp, replacement: string): string;
     replaceElements(pattern: string | RegExp, replacement: string): string;
     toNormalChar(): string;
+    regexParser(): RegExp;
   }
 }
 
@@ -86,6 +87,12 @@ String.prototype.replaceElements = function (
     result = result.replaceAll(el, replacer);
   });
 
+  return result;
+};
+
+String.prototype.regexParser = function () {
+  const str = this.toString();
+  const result = regexParser(str);
   return result;
 };
 

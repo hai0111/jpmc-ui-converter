@@ -2,12 +2,8 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 
 const rulesConfig: IRuleConfig[] = [
   {
-    type: ERuleConfigType.DELETE,
-    detected: "<label%space%*>",
-  },
-  {
     type: ERuleConfigType.EDIT,
-    detected: ">%space%*</form:(?:textarea|checkbox|input)>",
+    detected: ">%space%*</form:(?:textarea|input)>",
     dataReplaced: "/>",
   },
   {
@@ -160,7 +156,7 @@ ${
   {
     type: ERuleConfigType.EDIT,
     detected:
-      "(%before%*<label>[^<]*?<form:checkbox[^>]*?(?:/>|>%any%*</form:checkbox>)[^<]*?</label>%after%*)+",
+      "(%before%*<label[^>]*>[^<]*?<form:checkbox[^>]*?(?:/>|>%any%*</form:checkbox>)[^<]*?</label>%after%*)+",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "checkbox");
 
@@ -193,7 +189,7 @@ ${
   {
     type: ERuleConfigType.EDIT,
     detected:
-      "<form:checkbox((?<![^>]*checkbox__input)[^>])*?(?:/>|>%any%*</form:checkbox>)",
+      "%before%*<form:checkbox((?<![^>]*checkbox__input)[^>])*?(?:/>|>%any%*</form:checkbox>)%after%*",
     dataReplaced: (str) => {
       str = str.addClasses(regexParser("<label[^>]*>"), "checkbox");
 
@@ -205,13 +201,13 @@ ${
       );
 
       str = `
-<fieldset class="checkbox__group">
-  <div class="checkbox__group__inner">
-    ${str}
-  </div>
-  <form:errors #custom path="${path}" cssClass="form-error"/>
-</fieldset>
-      `;
+  <fieldset class="checkbox__group">
+    <div class="checkbox__group__inner">
+      ${str}
+    </div>
+    <form:errors #custom path="${path}" cssClass="form-error"/>
+  </fieldset>
+        `;
 
       return str;
     },
