@@ -20,6 +20,7 @@ const suggestions = {
         </div>
     </div>
 </div>`,
+  "Common --> Btn-Styles": "btn--font-size-16 btn--font-weight-700",
 };
 
 export default suggestions;
