@@ -46,7 +46,7 @@ const ruleConfigs: IRuleConfig[] = [
 
       str = str.addClasses(
         regexParser("(?<=<tfoot[^>]*>((?<!%any%*</tfoot>)%any%)*)<tr[^>]*>"),
-        "table__tfoot__row"
+        "table__tbody__row"
       );
 
       str = str.addClasses(
