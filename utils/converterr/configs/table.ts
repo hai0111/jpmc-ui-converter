@@ -3,11 +3,6 @@ import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 const ruleConfigs: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
-    detected: "tbl_header[\\w_-\\d]*",
-    dataReplaced: "",
-  },
-  {
-    type: ERuleConfigType.EDIT,
     detected: "tag:<table[^>]*>",
     dataReplaced: (str) => {
       return str;
@@ -61,10 +56,15 @@ const ruleConfigs: IRuleConfig[] = [
         "table__column table__column--border-right table__column--center"
       );
 
-      str = str.addClasses(
-        regexParser("<td[^>]*>"),
-        "table__column table__column--border-right table__column--center"
-      );
+      str = str.replace(regexParser("<td[^>]*>"), (td) => {
+        const isHeader = /tbl_header/.test(td);
+        return td.replaceClasses(
+          td,
+          `table__column ${
+            isHeader ? "table__column--header" : ""
+          } table__column--border-right table__column--center`
+        );
+      });
 
       str = str.replace(
         regexParser(
@@ -110,6 +110,11 @@ const ruleConfigs: IRuleConfig[] = [
       "table__column--border-right(?=((?<!%any%*</t[dh]>)%any%)+</t[dh]>%after%*</tr>)",
     dataReplaced: "",
     test: true,
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: "tbl_header[\\w_-\\d]*",
+    dataReplaced: "",
   },
 ];
 

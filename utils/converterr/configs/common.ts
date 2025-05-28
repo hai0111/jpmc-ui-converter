@@ -1,3 +1,4 @@
+import { *asfs } from 'fs';
 import { ERuleConfigType, type IRuleConfig, regexParser } from "./utils";
 
 const rulesConfig: IRuleConfig[] = [
@@ -32,6 +33,11 @@ const rulesConfig: IRuleConfig[] = [
   {
     type: ERuleConfigType.EDIT,
     detected: `<div[^>]*clear[^>]*"/>`,
+  },
+  {
+    type: ERuleConfigType.EDIT,
+    detected: `<p[^>]*>`,
+    dataReplaced: "addClass:my--0"
   },
   {
     type: ERuleConfigType.EDIT,
